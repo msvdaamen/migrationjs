@@ -7,6 +7,7 @@ export class Schema {
     static create(name: string, create: (blueprint: Blueprint) => void) {
         const blueprint = new Blueprint();
         create(blueprint);
+        console.log(blueprint);
     }
 
 

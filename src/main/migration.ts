@@ -1,10 +1,9 @@
-import {Schema} from "./schema";
 
 
 export abstract class Migration {
 
-    abstract up(schema: Schema);
+    abstract up();
 
-    abstract down(schema: Schema);
+    abstract down();
 
 }

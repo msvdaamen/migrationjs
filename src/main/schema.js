@@ -9,6 +9,7 @@ var Schema = /** @class */ (function () {
     Schema.create = function (name, create) {
         var blueprint = new blueprint_1.Blueprint();
         create(blueprint);
+        console.log(blueprint);
     };
     // alters table
     Schema.table = function (name) {
