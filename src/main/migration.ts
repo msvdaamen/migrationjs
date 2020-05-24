@@ -2,8 +2,12 @@
 
 export abstract class Migration {
 
-    abstract up();
+    abstract up(): void;
 
-    abstract down();
+    abstract down(): void;
+
+    migrate() {
+
+    }
 
 }

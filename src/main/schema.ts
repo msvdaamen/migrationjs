@@ -7,7 +7,10 @@ export class Schema {
     static create(name: string, create: (blueprint: Blueprint) => void) {
         const blueprint = new Blueprint();
         create(blueprint);
-        console.log(blueprint);
+
+        const columnStrings = blueprint.getColumns().map(column => column.toString());
+        const createString = `create table ${name} (${columnStrings.join(',')})`;
+        console.log(createString);
     }
 
 

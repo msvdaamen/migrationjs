@@ -198,11 +198,7 @@ export class Blueprint {
     increments(name: string): IntColumn {
         this.columns.push(
             new IntColumn(
-                name,
-                [
-                    'auto_increment',
-                    'unsigned'
-                ]
+                name
             )
         );
         return this.columns[this.columns.length - 1];
@@ -212,5 +208,9 @@ export class Blueprint {
         this.columns.push(
             new Column(name, type)
         )
+    }
+
+    getColumns() {
+        return this.columns;
     }
 }

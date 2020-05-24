@@ -17,7 +17,7 @@ var Column = /** @class */ (function () {
         return this;
     };
     Column.prototype.toString = function () {
-        return "" + name;
+        return "" + this.name;
     };
     return Column;
 }());
