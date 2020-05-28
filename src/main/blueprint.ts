@@ -1,10 +1,12 @@
 import {Column} from "../types/column";
 import {IntColumn} from "../types/int-column";
 import {StringColumn} from "../types/string.column";
+import {ForeignColumn} from "../types/foreign.column";
 
 export class Blueprint {
 
     private columns: Column[] = [];
+    private contraints: ForeignColumn[] = [];
 
     // TODO
     year(name: string) {
@@ -33,7 +35,12 @@ export class Blueprint {
 
     // TODO
     unsignedInteger(name: string) {
-
+        this.columns.push(
+            new IntColumn(
+                name
+            ).unsigned()
+        );
+        return <IntColumn>this.columns[this.columns.length - 1];
     }
 
     // TODO
@@ -121,9 +128,13 @@ export class Blueprint {
 
     }
 
-    // TODO
     integer(name: string) {
-
+        this.columns.push(
+            new IntColumn(
+                name
+            )
+        );
+        return <IntColumn>this.columns[this.columns.length - 1];
     }
 
     // TODO
@@ -199,15 +210,20 @@ export class Blueprint {
         this.columns.push(
             new IntColumn(
                 name
-            )
+            ).unsigned().autoincrement()
         );
-        return this.columns[this.columns.length - 1];
+        this.contraints.push(new ForeignColumn([name]));
+        return <IntColumn>this.columns[this.columns.length - 1];
     }
 
     column(name: string,  type: string) {
         this.columns.push(
             new Column(name, type)
         )
+    }
+
+    getConstraints() {
+        return this.contraints;
     }
 
     getColumns() {

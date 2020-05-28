@@ -35,58 +35,21 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Schema = void 0;
-var blueprint_1 = require("./blueprint");
-var connection_1 = require("../db/connection");
-var Schema = /** @class */ (function () {
-    function Schema() {
-    }
-    // creates table
-    Schema.create = function (name, create) {
-        return __awaiter(this, void 0, void 0, function () {
-            var blueprint;
+exports.readdir = void 0;
+var fs = require('fs');
+function readdir(path) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        fs.readdir(path, function (err, filenames) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        blueprint = new blueprint_1.Blueprint();
-                        create(blueprint);
-                        return [4 /*yield*/, this.run(name, blueprint)];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
+                if (err) {
+                    reject(err);
                 }
+                resolve(filenames);
+                return [2 /*return*/];
             });
-        });
-    };
-    // alters table
-    Schema.table = function (name) {
-    };
-    Schema.run = function (name, blueprint) {
-        return __awaiter(this, void 0, void 0, function () {
-            var columnStrings, constraintStrings, createString;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        columnStrings = blueprint.getColumns().map(function (column) { return column.toString(); });
-                        constraintStrings = blueprint.getConstraints().map(function (column) { return column.toString(); });
-                        createString = "create table " + name + " (" + __spreadArrays(columnStrings, constraintStrings).join(',') + ")";
-                        console.log(createString);
-                        return [4 /*yield*/, connection_1.query(createString)];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
-    return Schema;
-}());
-exports.Schema = Schema;
+        }); });
+    });
+}
+exports.readdir = readdir;

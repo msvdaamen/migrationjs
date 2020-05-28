@@ -4,12 +4,18 @@
 export class Column {
     private isNullable = false;
     private length: number = null;
+    private defaultValue: string | number | boolean = null;
+    private attributes = [];
 
     constructor(
         private name: string,
         private type: string
     ) {}
 
+    default(defaultValue: string | number | boolean) {
+        this.defaultValue = defaultValue;
+        return this;
+    }
 
     nullable() {
         this.isNullable = true;
@@ -21,8 +27,29 @@ export class Column {
         return this;
     }
 
+    protected addAttribute(attribute: string) {
+        this.attributes.push(attribute);
+    }
+
     toString() {
-        return `${this.name}`
+        let columnString = `${this.name} ${this.type}`
+        if (this.length) {
+            columnString += ` (${this.length})`
+        }
+
+        if (this.attributes.length) {
+            columnString += ' ' + this.attributes.join(' ');
+        }
+
+        if (!this.isNullable) {
+            columnString += ` NOT NULL`;
+        }
+
+        if (this.defaultValue) {
+            columnString += ` DEFAULT '${this.defaultValue}'`;
+        }
+
+        return columnString;
     }
 
 }

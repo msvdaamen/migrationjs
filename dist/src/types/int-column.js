@@ -20,6 +20,14 @@ var IntColumn = /** @class */ (function (_super) {
     function IntColumn(name) {
         return _super.call(this, name, 'int') || this;
     }
+    IntColumn.prototype.autoincrement = function () {
+        this.addAttribute('AUTO_INCREMENT');
+        return this;
+    };
+    IntColumn.prototype.unsigned = function () {
+        this.addAttribute('UNSIGNED');
+        return this;
+    };
     return IntColumn;
 }(column_1.Column));
 exports.IntColumn = IntColumn;

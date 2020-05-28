@@ -1,33 +1,49 @@
 import {Migration} from "./main/migration";
-import {checkMigrationTable} from "./db/connection";
-const fs = require('fs');
+import {checkMigrationTable, removeAllTables, setupDbConnection} from "./db/connection";
+import {readdir} from './utils/readdir';
+
 const path = require('path');
 
-const migrationsPath = 'migrations/';
+export async function migrate(globalPath: string, config: Config) {
 
-export async function migrate(globalPath: string) {
+    setupDbConnection(config.database);
 
-    checkMigrationTable();
+    await removeAllTables();
 
-    fs.readdir(migrationsPath, (err: any, filenames: string[]) => {
-        if (err) {
-            throw Error(err);
-        }
+    await checkMigrationTable();
+
+    const migrationsPath = config.folderName;
+
+    try {
+        const filenames = await readdir(migrationsPath);
 
         for(let i = 0; i < filenames.length; i++) {
             const filename = filenames[i];
             const fleType = path.extname(path.join(globalPath, migrationsPath, filename));
             if (fleType === '.js') {
-                import(path.join(globalPath, migrationsPath, filename)).then(file => {
-                    if (file.default.prototype.up && file.default.prototype.down) {
-                        const t: Migration = new file.default();
-                        t.up();
-                        // t.migrate();
-                    }
-                }).catch(err => console.log(err));
+                const file = await import(path.join(globalPath, migrationsPath, filename));
+                if (file.default.prototype.up && file.default.prototype.down) {
+                    const t: Migration = new file.default();
+                    await t.up();
+                }
             }
         }
-    });
+        return true;
+    } catch (e) {
+        console.log('error: ' + e);
+        return true;
+    }
+}
 
-    return true;
+
+interface Config {
+    database: DatabaseConfig;
+    folderName: string
+}
+
+export interface DatabaseConfig {
+    host: string;
+    user: string;
+    password: string;
+    database: string
 }

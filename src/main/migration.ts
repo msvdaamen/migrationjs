@@ -2,12 +2,8 @@
 
 export abstract class Migration {
 
-    abstract up(): void;
+    abstract async up(): Promise<void>;
 
-    abstract down(): void;
-
-    migrate() {
-
-    }
+    abstract async down(): Promise<void>;
 
 }

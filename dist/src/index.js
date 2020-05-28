@@ -57,32 +57,54 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.migrate = void 0;
 var connection_1 = require("./db/connection");
-var fs = require('fs');
+var readdir_1 = require("./utils/readdir");
 var path = require('path');
-var migrationsPath = 'migrations/';
-function migrate(globalPath) {
+function migrate(globalPath, config) {
     return __awaiter(this, void 0, void 0, function () {
+        var migrationsPath, filenames, i, filename, fleType, file, t, e_1;
         return __generator(this, function (_a) {
-            connection_1.checkMigrationTable();
-            fs.readdir(migrationsPath, function (err, filenames) {
-                if (err) {
-                    throw Error(err);
-                }
-                for (var i = 0; i < filenames.length; i++) {
-                    var filename = filenames[i];
-                    var fleType = path.extname(path.join(globalPath, migrationsPath, filename));
-                    if (fleType === '.js') {
-                        Promise.resolve().then(function () { return __importStar(require(path.join(globalPath, migrationsPath, filename))); }).then(function (file) {
-                            if (file.default.prototype.up && file.default.prototype.down) {
-                                var t = new file.default();
-                                t.up();
-                                // t.migrate();
-                            }
-                        }).catch(function (err) { return console.log(err); });
-                    }
-                }
-            });
-            return [2 /*return*/, true];
+            switch (_a.label) {
+                case 0:
+                    connection_1.setupDbConnection(config.database);
+                    return [4 /*yield*/, connection_1.removeAllTables()];
+                case 1:
+                    _a.sent();
+                    return [4 /*yield*/, connection_1.checkMigrationTable()];
+                case 2:
+                    _a.sent();
+                    migrationsPath = config.folderName;
+                    _a.label = 3;
+                case 3:
+                    _a.trys.push([3, 10, , 11]);
+                    return [4 /*yield*/, readdir_1.readdir(migrationsPath)];
+                case 4:
+                    filenames = _a.sent();
+                    i = 0;
+                    _a.label = 5;
+                case 5:
+                    if (!(i < filenames.length)) return [3 /*break*/, 9];
+                    filename = filenames[i];
+                    fleType = path.extname(path.join(globalPath, migrationsPath, filename));
+                    if (!(fleType === '.js')) return [3 /*break*/, 8];
+                    return [4 /*yield*/, Promise.resolve().then(function () { return __importStar(require(path.join(globalPath, migrationsPath, filename))); })];
+                case 6:
+                    file = _a.sent();
+                    if (!(file.default.prototype.up && file.default.prototype.down)) return [3 /*break*/, 8];
+                    t = new file.default();
+                    return [4 /*yield*/, t.up()];
+                case 7:
+                    _a.sent();
+                    _a.label = 8;
+                case 8:
+                    i++;
+                    return [3 /*break*/, 5];
+                case 9: return [2 /*return*/, true];
+                case 10:
+                    e_1 = _a.sent();
+                    console.log('error: ' + e_1);
+                    return [2 /*return*/, true];
+                case 11: return [2 /*return*/];
+            }
         });
     });
 }

@@ -4,9 +4,11 @@ exports.Blueprint = void 0;
 var column_1 = require("../types/column");
 var int_column_1 = require("../types/int-column");
 var string_column_1 = require("../types/string.column");
+var foreign_column_1 = require("../types/foreign.column");
 var Blueprint = /** @class */ (function () {
     function Blueprint() {
         this.columns = [];
+        this.contraints = [];
     }
     // TODO
     Blueprint.prototype.year = function (name) {
@@ -25,6 +27,8 @@ var Blueprint = /** @class */ (function () {
     };
     // TODO
     Blueprint.prototype.unsignedInteger = function (name) {
+        this.columns.push(new int_column_1.IntColumn(name).unsigned());
+        return this.columns[this.columns.length - 1];
     };
     // TODO
     Blueprint.prototype.unsignedDecimal = function (name, length, decimalLength) {
@@ -79,8 +83,9 @@ var Blueprint = /** @class */ (function () {
     // TODO
     Blueprint.prototype.longText = function (name) {
     };
-    // TODO
     Blueprint.prototype.integer = function (name) {
+        this.columns.push(new int_column_1.IntColumn(name));
+        return this.columns[this.columns.length - 1];
     };
     // TODO
     Blueprint.prototype.float = function (name, length, decimalLength) {
@@ -130,11 +135,15 @@ var Blueprint = /** @class */ (function () {
         return this.columns[this.columns.length - 1];
     };
     Blueprint.prototype.increments = function (name) {
-        this.columns.push(new int_column_1.IntColumn(name));
+        this.columns.push(new int_column_1.IntColumn(name).unsigned().autoincrement());
+        this.contraints.push(new foreign_column_1.ForeignColumn([name]));
         return this.columns[this.columns.length - 1];
     };
     Blueprint.prototype.column = function (name, type) {
         this.columns.push(new column_1.Column(name, type));
+    };
+    Blueprint.prototype.getConstraints = function () {
+        return this.contraints;
     };
     Blueprint.prototype.getColumns = function () {
         return this.columns;

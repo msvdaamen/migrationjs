@@ -1,14 +1,16 @@
 import { Column } from "../types/column";
 import { IntColumn } from "../types/int-column";
 import { StringColumn } from "../types/string.column";
+import { ForeignColumn } from "../types/foreign.column";
 export declare class Blueprint {
     private columns;
+    private contraints;
     year(name: string): void;
     uuid(name: string): void;
     unsignedTinyInteger(name: string): void;
     unsignedSmallInteger(name: string): void;
     unsignedMediumInteger(name: string): void;
-    unsignedInteger(name: string): void;
+    unsignedInteger(name: string): IntColumn;
     unsignedDecimal(name: string, length?: number, decimalLength?: number): void;
     unsignedBigInteger(name: string): void;
     tinyInteger(name: string): void;
@@ -26,7 +28,7 @@ export declare class Blueprint {
     mediumInteger(name: string): void;
     mediumIncrements(name: string): void;
     longText(name: string): void;
-    integer(name: string): void;
+    integer(name: string): IntColumn;
     float(name: string, length?: number, decimalLength?: number): void;
     double(name: string, length?: number, decimalLength?: number): void;
     decimal(name: string, length?: number, decimalLength?: number): void;
@@ -42,5 +44,6 @@ export declare class Blueprint {
     string(name: string, length?: number): StringColumn;
     increments(name: string): IntColumn;
     column(name: string, type: string): void;
+    getConstraints(): ForeignColumn[];
     getColumns(): Column[];
 }
