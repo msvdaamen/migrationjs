@@ -1,12 +1,14 @@
 import {Column} from "../types/column";
-import {IntColumn} from "../types/int-column";
-import {StringColumn} from "../types/string.column";
-import {ForeignColumn} from "../types/foreign.column";
+import {IntColumn} from "../types/types/int-column";
+import {StringColumn} from "../types/types/string.column";
+import {ConstrainedColumn} from "../types/constrained.column";
+import {PrimaryColumn} from "../types/constraints/primary.column";
+import {ForeignColumn} from "../types/constraints/foreign.column";
 
 export class Blueprint {
 
     private columns: Column[] = [];
-    private contraints: ForeignColumn[] = [];
+    private constraints: ConstrainedColumn[] = [];
 
     // TODO
     year(name: string) {
@@ -18,29 +20,47 @@ export class Blueprint {
 
     }
 
-    // TODO
+
     unsignedTinyInteger(name: string) {
-
+        const unsignedIntegerColumn = new IntColumn(
+            name,
+            'tiny'
+        ).unsigned();
+        return <IntColumn>this.addColumn(unsignedIntegerColumn);
     }
 
-    // TODO
+
     unsignedSmallInteger(name: string) {
-
+        const unsignedIntegerColumn = new IntColumn(
+            name,
+            'small'
+        ).unsigned();
+        return <IntColumn>this.addColumn(unsignedIntegerColumn);
     }
 
-    // TODO
+
     unsignedMediumInteger(name: string) {
-
+        const unsignedIntegerColumn = new IntColumn(
+            name,
+            'medium'
+        ).unsigned();
+        return <IntColumn>this.addColumn(unsignedIntegerColumn);
     }
 
-    // TODO
     unsignedInteger(name: string) {
-        this.columns.push(
-            new IntColumn(
-                name
-            ).unsigned()
-        );
-        return <IntColumn>this.columns[this.columns.length - 1];
+        const unsignedIntegerColumn = new IntColumn(
+            name
+        ).unsigned();
+        return <IntColumn>this.addColumn(unsignedIntegerColumn);
+    }
+
+
+    unsignedBigInteger(name: string) {
+        const unsignedIntegerColumn = new IntColumn(
+            name,
+            'big'
+        ).unsigned();
+        return <IntColumn>this.addColumn(unsignedIntegerColumn);
     }
 
     // TODO
@@ -48,19 +68,25 @@ export class Blueprint {
 
     }
 
-    // TODO
-    unsignedBigInteger(name: string) {
-
-    }
-
-    // TODO
     tinyInteger (name: string) {
-
+        const incrementsColumn = new IntColumn(
+            name,
+            'tiny'
+        ).unsigned()
+            .autoincrement()
+        this.addConstrainedColumn(new PrimaryColumn([name]))
+        return <IntColumn>this.addColumn(incrementsColumn);
     }
 
-    // TODO
-    tinyIncrements(name: string) {
 
+    tinyIncrements(name: string) {
+        const incrementsColumn = new IntColumn(
+            name,
+            'tiny'
+        ).unsigned()
+            .autoincrement()
+        this.addConstrainedColumn(new PrimaryColumn([name]))
+        return <IntColumn>this.addColumn(incrementsColumn);
     }
 
     // TODO
@@ -98,14 +124,26 @@ export class Blueprint {
 
     }
 
-    // TODO
-    smallInteger(name: string) {
 
+    smallInteger(name: string) {
+        const incrementsColumn = new IntColumn(
+            name,
+            'small'
+        ).unsigned()
+            .autoincrement()
+        this.addConstrainedColumn(new PrimaryColumn([name]))
+        return <IntColumn>this.addColumn(incrementsColumn);
     }
 
-    // TODO
-    smallIncrements(name: string) {
 
+    smallIncrements(name: string) {
+        const incrementsColumn = new IntColumn(
+            name,
+            'small'
+        ).unsigned()
+            .autoincrement()
+        this.addConstrainedColumn(new PrimaryColumn([name]))
+        return <IntColumn>this.addColumn(incrementsColumn);
     }
 
     // TODO
@@ -113,14 +151,26 @@ export class Blueprint {
 
     }
 
-    // TODO
-    mediumInteger(name: string) {
 
+    mediumInteger(name: string) {
+        const incrementsColumn = new IntColumn(
+            name,
+            'medium'
+        ).unsigned()
+            .autoincrement()
+        this.addConstrainedColumn(new PrimaryColumn([name]))
+        return <IntColumn>this.addColumn(incrementsColumn);
     }
 
-    // TODO
-    mediumIncrements(name: string) {
 
+    mediumIncrements(name: string) {
+        const incrementsColumn = new IntColumn(
+            name,
+            'medium'
+        ).unsigned()
+            .autoincrement()
+        this.addConstrainedColumn(new PrimaryColumn([name]))
+        return <IntColumn>this.addColumn(incrementsColumn);
     }
 
     // TODO
@@ -129,12 +179,10 @@ export class Blueprint {
     }
 
     integer(name: string) {
-        this.columns.push(
-            new IntColumn(
-                name
-            )
-        );
-        return <IntColumn>this.columns[this.columns.length - 1];
+        const integerColumn = new IntColumn(
+            name
+        )
+        return this.addColumn(integerColumn);
     }
 
     // TODO
@@ -177,14 +225,26 @@ export class Blueprint {
 
     }
 
-    // TODO
-    bigInteger(name: string) {
 
+    bigInteger(name: string) {
+        const incrementsColumn = new IntColumn(
+            name,
+            'big'
+        ).unsigned()
+            .autoincrement()
+        this.addConstrainedColumn(new PrimaryColumn([name]))
+        return <IntColumn>this.addColumn(incrementsColumn);
     }
 
-    // TODO
-    bigIncrements(name: string) {
 
+    bigIncrements(name: string) {
+        const incrementsColumn = new IntColumn(
+            name,
+            'big'
+        ).unsigned()
+            .autoincrement()
+        this.addConstrainedColumn(new PrimaryColumn([name]))
+        return <IntColumn>this.addColumn(incrementsColumn);
     }
 
     // TODO use unsignedBigInteger function
@@ -192,28 +252,30 @@ export class Blueprint {
 
     }
 
+    foreign(name: string) {
+        const foreignColumn = new ForeignColumn(name);
+        return <ForeignColumn>this.addConstrainedColumn(foreignColumn);
+    }
+
     id() {
         return this.increments('id');
     }
 
     string(name: string, length = 181): StringColumn {
-        this.columns.push(
-            new StringColumn(
-                name,
-                length
-            )
+        const stringColumn = new StringColumn(
+            name,
+            length
         );
-        return this.columns[this.columns.length - 1];
+        return this.addColumn(stringColumn);
     }
 
     increments(name: string): IntColumn {
-        this.columns.push(
-            new IntColumn(
-                name
-            ).unsigned().autoincrement()
-        );
-        this.contraints.push(new ForeignColumn([name]));
-        return <IntColumn>this.columns[this.columns.length - 1];
+        const incrementsColumn = new IntColumn(
+            name
+        ).unsigned()
+            .autoincrement()
+        this.addConstrainedColumn(new PrimaryColumn([name]))
+        return <IntColumn>this.addColumn(incrementsColumn);
     }
 
     column(name: string,  type: string) {
@@ -222,8 +284,18 @@ export class Blueprint {
         )
     }
 
+    addColumn(column: Column): Column {
+        this.columns.push(column);
+        return this.columns[this.columns.length - 1];
+    }
+
+    addConstrainedColumn(column: ConstrainedColumn): ConstrainedColumn{
+        this.constraints.push(column);
+        return this.constraints[this.constraints.length - 1];
+    }
+
     getConstraints() {
-        return this.contraints;
+        return this.constraints;
     }
 
     getColumns() {
