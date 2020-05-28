@@ -16,7 +16,6 @@ export async function migrate(globalPath: string, config: Config) {
 
     try {
         const filenames = await readdir(migrationsPath);
-
         for(let i = 0; i < filenames.length; i++) {
             const filename = filenames[i];
             const fleType = path.extname(path.join(globalPath, migrationsPath, filename));
