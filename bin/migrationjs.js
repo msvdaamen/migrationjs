@@ -1,33 +1,14 @@
 #!/usr/bin/env node
 const args = require('process.args')();
-const {migrate} = require('../src/index');
-var fs = require('fs');
+const {Command} = require('../src/commands/command');
+const {registerCommands} = require('../src/commands/command.registry');
 
-if (args.hasOwnProperty('migrate')) {
-    const config = require(process.cwd() + '/migrationjs.conf.json');
-    if (!config) {
-        throw Error('No migrationjs.conf.json in project root');
-    }
-    migrate(process.cwd(), config).then(() => {
-        process.exit();
-    });
-} else if (args.hasOwnProperty('generate:config')) {
-    const config = require(process.cwd() + '/migrationjs.conf.json');
-    if (!config) {
-        const newConfig = {
-            database: {
-                host: 'localhost',
-                user: 'root',
-                password: '',
-                database: ''
-            },
-            folderName: 'migrations'
-        };
-        const json = JSON.stringify(newConfig);
-        fs.writeFile(process.cwd() + '/migrationjs.conf.json', json, 'utf8', () => {});
-    } else {
-        throw Error('There is already an migrationjs.conf.json file');
-    }
-} else {
+registerCommands();
+
+const arguments = Object.keys(args);
+
+const command = Command.get(arguments[2]);
+
+command.run(arguments[3]).then(() => {
     process.exit();
-}
+});
