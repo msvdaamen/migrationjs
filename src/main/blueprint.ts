@@ -4,6 +4,7 @@ import {StringColumn} from "../types/types/string.column";
 import {ConstrainedColumn} from "../types/constrained.column";
 import {PrimaryColumn} from "../types/constraints/primary.column";
 import {ForeignColumn} from "../types/constraints/foreign.column";
+import {BooleanColumn} from "../types/types/boolean.column";
 
 export class Blueprint {
 
@@ -222,18 +223,19 @@ export class Blueprint {
 
     // TODO
     boolean(name: string) {
-
+        const booleanColumn = new BooleanColumn(
+            name
+        )
+        return <BooleanColumn>this.addColumn(booleanColumn);
     }
 
 
     bigInteger(name: string) {
-        const incrementsColumn = new IntColumn(
+        const bigIntColumn = new IntColumn(
             name,
             'big'
-        ).unsigned()
-            .autoincrement()
-        this.addConstrainedColumn(new PrimaryColumn([name]))
-        return <IntColumn>this.addColumn(incrementsColumn);
+        );
+        return <IntColumn>this.addColumn(bigIntColumn);
     }
 
 

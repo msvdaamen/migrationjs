@@ -46,9 +46,13 @@ export class Column {
         }
 
         if (this.defaultValue) {
-            columnString += ` DEFAULT '${this.defaultValue}'`;
+            if (typeof this.defaultValue === 'string') {
+                columnString += ` DEFAULT '${this.defaultValue}'`;
+            } else {
+                columnString += ` DEFAULT ${this.defaultValue}`;
+            }
         }
-
+        console.log(columnString);
         return columnString;
     }
 

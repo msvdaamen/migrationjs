@@ -1,6 +1,7 @@
 import {Blueprint} from "./blueprint";
 import {query} from "../db/connection";
 
+const SQL = require('sql-template-strings')
 
 export class Schema {
 
@@ -19,8 +20,8 @@ export class Schema {
     private static async run(name: string, blueprint: Blueprint) {
         const columnStrings = blueprint.getColumns().map(column => column.toString());
         const constraintStrings = blueprint.getConstraints().map(column => column.toString());
-        const createString = `create table ${name} (${[...columnStrings, ...constraintStrings].join(',')})`;
-        console.log(createString);
+        const tables = [...columnStrings, ...constraintStrings].join(',');
+        const createString = `create table ${name} (${tables})`;
         await query(createString);
     }
 

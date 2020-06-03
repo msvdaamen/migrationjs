@@ -24,5 +24,9 @@ export class IntColumn extends Column {
         this.addAttribute('UNSIGNED');
         return this;
     }
+
+    default(defaultValue: number): this {
+        return super.default(defaultValue);
+    }
 }
 type intSize = 'normal' | 'tiny' | 'small' | 'medium' | 'big'

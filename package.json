@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "mysql": "^2.18.1",
-    "process.args": "^0.1.0"
+    "process.args": "^0.1.0",
+    "sql-template-strings": "^2.2.2"
   }
 }
