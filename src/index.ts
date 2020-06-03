@@ -10,14 +10,14 @@ export async function migrate(globalPath: string, config: Config) {
 
     setupDbConnection(config.database);
 
-    await removeAllTables();
+    // await removeAllTables();
 
     await checkMigrationTable();
 
     const existingMigrations = await getExistingMigrations();
     const migrationSet = new Set<string>();
     existingMigrations.forEach(migration => {
-        migrationSet.add(migration.migration)
+        migrationSet.add(migration.migration);
     })
 
     const migrationsPath = config.folderName;
