@@ -3,7 +3,7 @@
 
 export class Column {
     private isNullable = false;
-    private length: number = null;
+    protected length: number | string = null;
     private defaultValue: string | number | boolean = null;
     private attributes = [];
 
@@ -22,13 +22,18 @@ export class Column {
         return this;
     }
 
-    setLength(length: number) {
-        this.length = length;
+    setLength(length: number | string, decimalLength: number = null) {
+        if (length && decimalLength) {
+            this.length = `${length},${decimalLength}`;
+        } else {
+            this.length = length;
+        }
         return this;
     }
 
     protected addAttribute(attribute: string) {
         this.attributes.push(attribute);
+        return this;
     }
 
     toString() {
@@ -52,7 +57,6 @@ export class Column {
                 columnString += ` DEFAULT ${this.defaultValue}`;
             }
         }
-        console.log(columnString);
         return columnString;
     }
 

@@ -9,6 +9,9 @@ const arguments = Object.keys(args);
 
 const command = Command.get(arguments[2]);
 
+console.time('run');
+
 command.run(arguments[3]).then(() => {
+    console.timeEnd('run');
     process.exit();
 });

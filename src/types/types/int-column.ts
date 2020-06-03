@@ -3,7 +3,7 @@ import {Column} from "../column";
 
 export class IntColumn extends Column {
 
-    constructor(name: string, size: intSize = 'normal') {
+    constructor(name: string, size: IntSizeType = 'normal') {
         let type = 'int'
 
         switch (size) {
@@ -29,4 +29,4 @@ export class IntColumn extends Column {
         return super.default(defaultValue);
     }
 }
-type intSize = 'normal' | 'tiny' | 'small' | 'medium' | 'big'
+export type IntSizeType = 'normal' | 'tiny' | 'small' | 'medium' | 'big'

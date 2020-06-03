@@ -9,7 +9,7 @@ export class Schema {
     static async create(name: string, create: (blueprint: Blueprint) => void) {
         const blueprint = new Blueprint();
         create(blueprint);
-        await this.run(name, blueprint);
+        await this.runCreate(name, blueprint);
     }
 
     // alters table
@@ -17,7 +17,7 @@ export class Schema {
 
     }
 
-    private static async run(name: string, blueprint: Blueprint) {
+    private static async runCreate(name: string, blueprint: Blueprint) {
         const columnStrings = blueprint.getColumns().map(column => column.toString());
         const constraintStrings = blueprint.getConstraints().map(column => column.toString());
         const tables = [...columnStrings, ...constraintStrings].join(',');

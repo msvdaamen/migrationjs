@@ -1,262 +1,234 @@
 import {Column} from "../types/column";
-import {IntColumn} from "../types/types/int-column";
+import {IntColumn, IntSizeType} from "../types/types/int-column";
 import {StringColumn} from "../types/types/string.column";
 import {ConstrainedColumn} from "../types/constrained.column";
 import {PrimaryColumn} from "../types/constraints/primary.column";
 import {ForeignColumn} from "../types/constraints/foreign.column";
 import {BooleanColumn} from "../types/types/boolean.column";
+import {TextColumn, TextSizeType} from "../types/types/text.column";
+import {FloatColumn} from "../types/types/float.column";
+import {DoubleColumn} from "../types/types/double.column";
+import {DecimalColumn} from "../types/types/decimal.column";
+import {CharColumn} from "../types/types/char.column";
+import {TimeColumn} from "../types/types/time.column";
+import {DateColumn} from "../types/types/date.column";
+import {DatetimeColumn} from "../types/types/datetime.column";
+import {TimestampColumn} from "../types/types/timestamp.column";
+import {UuidColumn} from "../types/types/uuid.column";
+import {YearColumn} from "../types/types/year.column";
 
 export class Blueprint {
 
     private columns: Column[] = [];
     private constraints: ConstrainedColumn[] = [];
 
-    // TODO
     year(name: string) {
-
+        const yearColumn = new YearColumn(
+            name
+        );
+        return this.addColumn(yearColumn);
     }
 
-    // TODO
     uuid(name: string) {
-
+        const uuidColumn = new UuidColumn(
+            name
+        );
+        return this.addColumn(uuidColumn);
     }
 
 
     unsignedTinyInteger(name: string) {
-        const unsignedIntegerColumn = new IntColumn(
-            name,
-            'tiny'
-        ).unsigned();
-        return <IntColumn>this.addColumn(unsignedIntegerColumn);
+        return this.unsignedInteger(name, 'tiny');
     }
 
 
     unsignedSmallInteger(name: string) {
-        const unsignedIntegerColumn = new IntColumn(
-            name,
-            'small'
-        ).unsigned();
-        return <IntColumn>this.addColumn(unsignedIntegerColumn);
+        return this.unsignedInteger(name, 'small');
     }
 
 
     unsignedMediumInteger(name: string) {
-        const unsignedIntegerColumn = new IntColumn(
-            name,
-            'medium'
-        ).unsigned();
-        return <IntColumn>this.addColumn(unsignedIntegerColumn);
+        return this.unsignedInteger(name, 'medium');
     }
 
-    unsignedInteger(name: string) {
-        const unsignedIntegerColumn = new IntColumn(
-            name
-        ).unsigned();
-        return <IntColumn>this.addColumn(unsignedIntegerColumn);
+    unsignedInteger(name: string, size: IntSizeType = 'normal') {
+        return this.integer(name, size).unsigned();
     }
 
 
     unsignedBigInteger(name: string) {
-        const unsignedIntegerColumn = new IntColumn(
-            name,
-            'big'
-        ).unsigned();
-        return <IntColumn>this.addColumn(unsignedIntegerColumn);
+        return this.unsignedInteger(name, 'big');
     }
 
-    // TODO
     unsignedDecimal(name: string, length: number = 8, decimalLength: number = 2) {
-
+        return this.decimal(name, length, decimalLength).unsigned();
     }
 
     tinyInteger (name: string) {
-        const incrementsColumn = new IntColumn(
-            name,
-            'tiny'
-        ).unsigned()
-            .autoincrement()
-        this.addConstrainedColumn(new PrimaryColumn([name]))
-        return <IntColumn>this.addColumn(incrementsColumn);
+        return this.integer(name, 'tiny');
     }
 
 
     tinyIncrements(name: string) {
-        const incrementsColumn = new IntColumn(
-            name,
-            'tiny'
-        ).unsigned()
-            .autoincrement()
-        this.addConstrainedColumn(new PrimaryColumn([name]))
-        return <IntColumn>this.addColumn(incrementsColumn);
+        return this.increments(name, 'tiny');
     }
 
-    // TODO
     timestampsTz() {
-
+        this.timestamp('created_at').nullable().useCurrent();
+        this.timestamp('updated_at').nullable().useCurrent().onUpdate();
     }
 
-    // TODO
     timestamps() {
-
+        this.timestamp('created_at').nullable().useCurrent();
+        this.timestamp('updated_at').nullable().useCurrent().onUpdate();
     }
 
-    // TODO
     timestampTz(name: string) {
-
+        const timestampColumn = new TimestampColumn(
+            name
+        );
+        return this.addColumn(timestampColumn);
     }
 
-    // TODO
     timestamp(name: string) {
-
+        const timestampColumn = new TimestampColumn(
+            name
+        );
+        return this.addColumn(timestampColumn);
     }
 
-    // TODO
     timeTz(name: string) {
-
+        const timeColumn = new TimeColumn(
+            name
+        );
+        return this.addColumn(timeColumn);
     }
 
-    // TODO
     time(name: string) {
-
+        const timeColumn = new TimeColumn(
+            name
+        );
+        return this.addColumn(timeColumn);
     }
 
-    // TODO
-    text(nam: string) {
-
+    text(name: string, size: TextSizeType = 'normal') {
+        const textColumn = new TextColumn(
+            name,
+            size
+        );
+        return this.addColumn(textColumn);
     }
 
 
     smallInteger(name: string) {
-        const incrementsColumn = new IntColumn(
-            name,
-            'small'
-        ).unsigned()
-            .autoincrement()
-        this.addConstrainedColumn(new PrimaryColumn([name]))
-        return <IntColumn>this.addColumn(incrementsColumn);
+        return this.integer(name, 'small');
     }
 
 
     smallIncrements(name: string) {
-        const incrementsColumn = new IntColumn(
-            name,
-            'small'
-        ).unsigned()
-            .autoincrement()
-        this.addConstrainedColumn(new PrimaryColumn([name]))
-        return <IntColumn>this.addColumn(incrementsColumn);
+        return this.increments(name, 'small');
     }
 
-    // TODO
     mediumText(name: string) {
-
+        return this.text(name, 'medium');
     }
-
 
     mediumInteger(name: string) {
-        const incrementsColumn = new IntColumn(
-            name,
-            'medium'
-        ).unsigned()
-            .autoincrement()
-        this.addConstrainedColumn(new PrimaryColumn([name]))
-        return <IntColumn>this.addColumn(incrementsColumn);
+        return this.integer(name, 'medium');
     }
 
 
     mediumIncrements(name: string) {
-        const incrementsColumn = new IntColumn(
-            name,
-            'medium'
-        ).unsigned()
-            .autoincrement()
-        this.addConstrainedColumn(new PrimaryColumn([name]))
-        return <IntColumn>this.addColumn(incrementsColumn);
+        return this.increments(name, 'medium');
     }
 
-    // TODO
     longText(name: string) {
-
+        return this.text(name, 'long');
     }
 
-    integer(name: string) {
+    integer(name: string, size: IntSizeType = 'normal') {
         const integerColumn = new IntColumn(
-            name
+            name,
+            size
         )
         return this.addColumn(integerColumn);
     }
 
-    // TODO
     float(name: string, length: number = 8, decimalLength: number = 2) {
-
+        const floatColumn = new FloatColumn(
+            name,
+            length,
+            decimalLength
+        )
+        return this.addColumn(floatColumn);
     }
 
-    // TODO
     double(name: string, length: number = 8, decimalLength: number = 2) {
-
+        const doubleColumn = new DoubleColumn(
+            name,
+            length,
+            decimalLength
+        )
+        return this.addColumn(doubleColumn);
     }
 
-    // TODO
     decimal(name: string, length: number = 8, decimalLength: number = 2) {
-
+        const decimalColumn = new DecimalColumn(
+            name,
+            length,
+            decimalLength
+        )
+        return this.addColumn(decimalColumn);
     }
 
-    // TODO
     dateTimeTz(name: string) {
-
+        const datetimeColumn = new DatetimeColumn(
+            name
+        );
+        return this.addColumn(datetimeColumn);
     }
 
-    // TODO
     dateTime(name: string) {
-
+        const datetimeColumn = new DatetimeColumn(
+            name
+        );
+        return this.addColumn(datetimeColumn);
     }
 
-    // TODO
     date(name: string) {
-
+        const dateColumn = new DateColumn(
+            name
+        );
+        return this.addColumn(dateColumn);
     }
 
-    // TODO
     char(name: string) {
-
+        const charColumn = new CharColumn(
+            name
+        )
+        return this.addColumn(charColumn);
     }
 
-    // TODO
     boolean(name: string) {
         const booleanColumn = new BooleanColumn(
             name
         )
-        return <BooleanColumn>this.addColumn(booleanColumn);
+        return this.addColumn(booleanColumn);
     }
 
 
     bigInteger(name: string) {
-        const bigIntColumn = new IntColumn(
-            name,
-            'big'
-        );
-        return <IntColumn>this.addColumn(bigIntColumn);
+        return this.integer(name, 'big');
     }
 
 
     bigIncrements(name: string) {
-        const incrementsColumn = new IntColumn(
-            name,
-            'big'
-        ).unsigned()
-            .autoincrement()
-        this.addConstrainedColumn(new PrimaryColumn([name]))
-        return <IntColumn>this.addColumn(incrementsColumn);
-    }
-
-    // TODO use unsignedBigInteger function
-    foreignId(name: string) {
-
+        return this.increments(name, 'big');
     }
 
     foreign(name: string) {
         const foreignColumn = new ForeignColumn(name);
-        return <ForeignColumn>this.addConstrainedColumn(foreignColumn);
+        return this.addConstrainedColumn(foreignColumn);
     }
 
     id() {
@@ -271,13 +243,14 @@ export class Blueprint {
         return this.addColumn(stringColumn);
     }
 
-    increments(name: string): IntColumn {
+    increments(name: string, size: IntSizeType = 'normal'): IntColumn {
         const incrementsColumn = new IntColumn(
-            name
+            name,
+            size
         ).unsigned()
             .autoincrement()
         this.addConstrainedColumn(new PrimaryColumn([name]))
-        return <IntColumn>this.addColumn(incrementsColumn);
+        return this.addColumn(incrementsColumn);
     }
 
     column(name: string,  type: string) {
@@ -286,14 +259,14 @@ export class Blueprint {
         )
     }
 
-    addColumn(column: Column): Column {
+    addColumn<T extends Column>(column: T): T {
         this.columns.push(column);
-        return this.columns[this.columns.length - 1];
+        return <T>this.columns[this.columns.length - 1];
     }
 
-    addConstrainedColumn(column: ConstrainedColumn): ConstrainedColumn{
+    addConstrainedColumn<T extends ConstrainedColumn>(column: T): T {
         this.constraints.push(column);
-        return this.constraints[this.constraints.length - 1];
+        return <T>this.constraints[this.constraints.length - 1];
     }
 
     getConstraints() {

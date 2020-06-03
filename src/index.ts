@@ -47,7 +47,7 @@ export async function migrate(globalPath: string, config: Config) {
                 const t: Migration = new file.default();
                 await t.up();
                 await query(SQL`insert into migrations (migration, batch) values (${subFilename}, 1)`);
-                console.log(subFilename);
+                console.log(`migrated: ${subFilename}`);
             }
         }
 
