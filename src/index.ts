@@ -10,7 +10,7 @@ export async function migrate(globalPath: string, config: Config) {
 
     setupDbConnection(config.database);
 
-    // await removeAllTables();
+    await removeAllTables();
 
     await checkMigrationTable();
 
@@ -38,6 +38,12 @@ export async function migrate(globalPath: string, config: Config) {
 
         const newMigrations = Array.from(newMigrationSet);
 
+        const result = await query(`select max(batch) as max from migrations`);
+        let batchNumber = 1;
+        if (result[0].max) {
+            batchNumber = (result[0].max + 1);
+        }
+
         for(let i = 0; i < newMigrations.length; i++) {
             const migration = newMigrations[i];
             const subFilename = migration.substr(0, migration.lastIndexOf("."));
@@ -46,7 +52,7 @@ export async function migrate(globalPath: string, config: Config) {
             if (file.default.prototype.up && file.default.prototype.down) {
                 const t: Migration = new file.default();
                 await t.up();
-                await query(SQL`insert into migrations (migration, batch) values (${subFilename}, 1)`);
+                await query(SQL`insert into migrations (migration, batch) values (${subFilename}, ${batchNumber})`);
                 console.log(`migrated: ${subFilename}`);
             }
         }

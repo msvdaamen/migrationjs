@@ -16,11 +16,14 @@ import {DatetimeColumn} from "../types/types/datetime.column";
 import {TimestampColumn} from "../types/types/timestamp.column";
 import {UuidColumn} from "../types/types/uuid.column";
 import {YearColumn} from "../types/types/year.column";
+import {IndexColumn} from "../types/constraints/index.column";
+import {UniqueColumn} from "../types/constraints/unique.column";
 
 export class Blueprint {
 
     private columns: Column[] = [];
     private constraints: ConstrainedColumn[] = [];
+    private columnDrops: string[] = [];
 
     year(name: string) {
         const yearColumn = new YearColumn(
@@ -259,6 +262,24 @@ export class Blueprint {
         )
     }
 
+    dropColumn(name: string | string[]) {
+        if (Array.isArray(name)) {
+            this.columnDrops.push(...name);
+        } else {
+            this.columnDrops.push(name);
+        }
+    }
+
+    index(name: string | string[]) {
+        const indexColumn = new IndexColumn(name);
+        return this.addConstrainedColumn(indexColumn);
+    }
+
+    unique(name: string | string[]) {
+        const uniqueColumn = new UniqueColumn(name);
+        return this.addConstrainedColumn(uniqueColumn);
+    }
+
     addColumn<T extends Column>(column: T): T {
         this.columns.push(column);
         return <T>this.columns[this.columns.length - 1];
@@ -275,5 +296,9 @@ export class Blueprint {
 
     getColumns() {
         return this.columns;
+    }
+
+    getColumnDrops() {
+        return this.columnDrops;
     }
 }
