@@ -1,4 +1,6 @@
-import {DatabaseConfig} from "../index";
+import {DatabaseConfig} from "../interfaces/database.config";
+import {SQLStatement} from "sql-template-strings";
+
 const SQL = require('sql-template-strings')
 
 const mysql = require('mysql');
@@ -33,7 +35,7 @@ export async function removeAllTables() {
 }
 
 
-export function query(query: string): Promise<any> {
+export function query(query: string | SQLStatement): Promise<any> {
     return new Promise((resolve, reject) => {
         getConnection().query(query, (error: any, results: any, fields: any) => {
             if (error) {

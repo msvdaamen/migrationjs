@@ -3,9 +3,9 @@ import {writeFile} from "../utils/write-file";
 
 
 const migrationContent = (fileName: string) =>
-`import {Migration} from 'migrationjs/src/main/Migration';
-import {Blueprint} from 'migrationjs/src/main/Blueprint';
-import {Schema} from 'migrationjs/src/main/Schema';
+`import {Migration} from 'migrationjs';
+import {Blueprint} from 'migrationjs';
+import {Schema} from 'migrationjs';
 
 
 export default class ${fileName} extends Migration {

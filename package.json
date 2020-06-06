@@ -1,19 +1,21 @@
 {
   "name": "migrationjs",
-  "version": "0.1.13",
+  "version": "0.2.0",
   "description": "migration system for js",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "dev": "ts-node-dev --watch --respawn ./src/app.ts --clear",
-    "build": "tsc -p .",
     "start": "nodemon",
     "versionPath": "npm version patch"
   },
   "preferGlobal": "true",
   "bin": {
     "migrationjs": "bin/migrationjs.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-user/repo-url.git"
   },
   "keywords": [],
   "author": "msvdaamen",

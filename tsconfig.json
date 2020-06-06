@@ -68,6 +68,7 @@
     "resolveJsonModule": true
   },
   "include": [
+    "./index.ts",
     "./src/**/*"
   ],
   "exclude": [
