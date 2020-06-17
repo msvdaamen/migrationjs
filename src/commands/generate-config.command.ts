@@ -1,12 +1,13 @@
 import {Command} from "./command";
 import * as fs from "fs";
+import path from "path";
 
 
 export class GenerateConfigCommand extends Command {
 
     async run(): Promise<any> {
-        const config = require(process.cwd() + '/migrationjs.conf.json');
-        if (!config) {
+        const hasConfig = fs.existsSync(path.join(process.cwd(), 'migrationjs.conf.json'));
+        if (!hasConfig) {
             const newConfig = {
                 database: {
                     host: 'localhost',

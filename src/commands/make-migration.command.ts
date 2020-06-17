@@ -14,7 +14,7 @@ export default class ${fileName} extends Migration {
         throw new Error("Method not implemented.");
     }
 
-    down(): Promise<void> {
+    async down() {
         throw new Error("Method not implemented.");
     }
 }
