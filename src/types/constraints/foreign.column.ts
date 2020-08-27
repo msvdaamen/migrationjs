@@ -35,8 +35,8 @@ export class ForeignColumn extends ConstrainedColumn {
     }
 
 
-    toString() {
-        let foreignString = `INDEX ${this.column}_ind (${this.column}), CONSTRAINT ${this.column}_fk FOREIGN KEY (${this.column}) REFERENCES ${this._on}(${this._references})`;
+    toString(tableName: string) {
+        let foreignString = `INDEX ${tableName}_${this.column}_ind (${this.column}), CONSTRAINT ${tableName}_${this.column}_fk FOREIGN KEY (${this.column}) REFERENCES ${this._on}(${this._references})`;
 
         if (this._onUpdate) {
             foreignString += ` ON UPDATE ${this._onUpdate}`;

@@ -8,7 +8,7 @@ export class PrimaryColumn extends ConstrainedColumn {
         super();
     }
 
-    toString(): string {
-        return `CONSTRAINT ${this.keys.join('_') + '_pk'} PRIMARY KEY (${this.keys.join(', ')})`;
+    toString(tableName:string): string {
+        return `CONSTRAINT ${tableName}_${this.keys.join('_') + '_pk'} PRIMARY KEY (${this.keys.join(', ')})`;
     }
 }

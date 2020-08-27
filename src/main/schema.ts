@@ -34,7 +34,7 @@ export class Schema {
     private static async runCreate(name: string, blueprint: Blueprint) {
         if (blueprint.getColumns().length > 0 || blueprint.getConstraints().length > 0) {
             const columnStrings = blueprint.getColumns().map(column => column.toString());
-            const constraintStrings = blueprint.getConstraints().map(column => column.toString());
+            const constraintStrings = blueprint.getConstraints().map(column => column.toString(name));
             const tables = [...columnStrings, ...constraintStrings].join(',');
             const createString = `create table ${name} (${tables})`;
             await query(createString);
@@ -44,7 +44,7 @@ export class Schema {
     private static async runAlter(name: string, blueprint: Blueprint) {
         if (blueprint.getColumns().length > 0 || blueprint.getConstraints().length > 0) {
             const columnStrings = blueprint.getColumns().map(column => column.toStringAlter());
-            const constraintStrings = blueprint.getConstraints().map(column => column.toString());
+            const constraintStrings = blueprint.getConstraints().map(column => column.toString(name));
             const tables = [...columnStrings, ...constraintStrings].join(',');
             const createString = `alter table ${name} ${tables}`;
             await query(createString);

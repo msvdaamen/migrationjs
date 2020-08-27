@@ -3,5 +3,5 @@
 
 export abstract class ConstrainedColumn {
 
-    abstract toString();
+    abstract toString(tableName: string);
 }

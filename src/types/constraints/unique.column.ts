@@ -13,8 +13,8 @@ export class UniqueColumn extends ConstrainedColumn {
         this.name = name;
     }
 
-    toString() {
-        return `CONSTRAINT ${this.name.join('_') + '_uc'} UNIQUE (${this.name.join(', ')})`;
+    toString(tableName:string) {
+        return `CONSTRAINT ${tableName}_${this.name.join('_') + '_uc'} UNIQUE (${this.name.join(', ')})`;
     }
 
 }

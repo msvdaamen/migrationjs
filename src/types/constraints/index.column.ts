@@ -13,7 +13,7 @@ export class IndexColumn extends ConstrainedColumn {
         this.name = name;
     }
 
-    toString(): string {
-        return `INDEX (${this.name.join(', ')})`;
+    toString(tableName: string): string {
+        return `INDEX (${tableName}_${this.name.join(', ')})`;
     }
 }
