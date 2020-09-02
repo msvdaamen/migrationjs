@@ -14,6 +14,8 @@ export class IndexColumn extends ConstrainedColumn {
     }
 
     toString(tableName: string): string {
-        return `INDEX (${tableName}_${this.name.join(', ')})`;
+        return this.name.map(name => {
+            return `INDEX ${tableName}_${name} (${name})`
+        }).join(', ')
     }
 }
