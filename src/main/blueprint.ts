@@ -280,6 +280,11 @@ export class Blueprint {
         return this.addConstrainedColumn(uniqueColumn);
     }
 
+    primary(...names: string[]) {
+        const primaryColumn = new PrimaryColumn(names);
+        return this.addConstrainedColumn(primaryColumn);
+    }
+
     addColumn<T extends Column>(column: T): T {
         this.columns.push(column);
         return <T>this.columns[this.columns.length - 1];
