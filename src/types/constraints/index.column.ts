@@ -20,6 +20,6 @@ export class IndexColumn extends ConstrainedColumn {
     }
 
     toStringAlter(tableName: string) {
-        return `INDEX (${tableName}_${this.name.join(', ')})`;
+        return `ADD INDEX (${tableName}_${this.name.join(', ')})`;
     }
 }
