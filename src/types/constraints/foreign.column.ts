@@ -47,5 +47,17 @@ export class ForeignColumn extends ConstrainedColumn {
         }
         return foreignString;
     }
+    toStringAlter(tableName: string) {
+        let foreignString = `INDEX ${tableName}_${this.column}_ind (${this.column}), ADD CONSTRAINT ${tableName}_${this.column}_fk FOREIGN KEY (${this.column}) REFERENCES ${this._on}(${this._references})`;
+
+        if (this._onUpdate) {
+            foreignString += ` ON UPDATE ${this._onUpdate}`;
+        }
+
+        if (this._onDelete) {
+            foreignString += ` ON DELETE ${this._onDelete}`;
+        }
+        return foreignString;
+    }
 }
 type onAction = 'cascade' | 'set null' | 'no action' | 'restrict';

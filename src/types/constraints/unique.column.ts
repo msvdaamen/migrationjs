@@ -17,4 +17,8 @@ export class UniqueColumn extends ConstrainedColumn {
         return `CONSTRAINT ${tableName}_${this.name.join('_') + '_uc'} UNIQUE (${this.name.join(', ')})`;
     }
 
+    toStringAlter(tableName: string) {
+        return `ADD CONSTRAINT ${tableName}_${this.name.join('_') + '_uc'} UNIQUE (${this.name.join(', ')})`;
+    }
+
 }

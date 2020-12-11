@@ -18,4 +18,8 @@ export class IndexColumn extends ConstrainedColumn {
             return `INDEX ${tableName}_${name} (${name})`
         }).join(', ')
     }
+
+    toStringAlter(tableName: string) {
+        return `INDEX (${tableName}_${this.name.join(', ')})`;
+    }
 }

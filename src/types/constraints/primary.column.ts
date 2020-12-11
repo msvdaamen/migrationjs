@@ -11,4 +11,8 @@ export class PrimaryColumn extends ConstrainedColumn {
     toString(tableName:string): string {
         return `CONSTRAINT ${tableName}_${this.keys.join('_') + '_pk'} PRIMARY KEY (${this.keys.join(', ')})`;
     }
+
+    toStringAlter(tableName: string) {
+        return `ADD CONSTRAINT ${tableName}_${this.keys.join('_') + '_pk'} PRIMARY KEY (${this.keys.join(', ')})`;
+    }
 }
