@@ -7,7 +7,14 @@ export class BooleanColumn extends Column {
         super(name, 'boolean');
     }
 
-    default(defaultValue: boolean): this {
+    default(defaultValue: boolean | 0 | 1): this {
+        if (typeof defaultValue === 'boolean') {
+            defaultValue = defaultValue ? 1 : 0;
+        } else if (typeof defaultValue === 'number') {
+            if (defaultValue > 1) {
+                defaultValue = 1;
+            }
+        }
         return super.default(defaultValue);
     }
 }

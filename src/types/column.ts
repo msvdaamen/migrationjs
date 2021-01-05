@@ -1,5 +1,5 @@
 
-
+const mysql = require('mysql');
 
 export class Column {
     private isNullable = false;
@@ -53,7 +53,7 @@ export class Column {
     }
 
     toString() {
-        let columnString = `${this.name} ${this.type}`
+        let columnString = `${'`' + this.name + '`'} ${this.type}`
         if (this.length) {
             columnString += ` (${this.length})`
         }
@@ -66,7 +66,7 @@ export class Column {
             columnString += ` NOT NULL`;
         }
 
-        if (this.defaultValue) {
+        if (this.defaultValue || typeof this.defaultValue === 'boolean' || typeof this.defaultValue === 'number') {
             if (typeof this.defaultValue === 'string') {
                 columnString += ` DEFAULT '${this.defaultValue}'`;
             } else {
