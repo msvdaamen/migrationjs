@@ -1,10 +1,11 @@
 import {DatabaseConfig} from "../interfaces/database.config";
 import {SQLStatement} from "sql-template-strings";
+import {Connection} from "mysql";
 
 const SQL = require('sql-template-strings')
 
 const mysql = require('mysql');
-let connection = null;
+let connection: Connection = null;
 export function setupDbConnection(database: DatabaseConfig) {
     connection = mysql.createConnection({
         host     : database.host,
