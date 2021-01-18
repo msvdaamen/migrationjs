@@ -18,6 +18,7 @@ import {UuidColumn} from "../types/types/uuid.column";
 import {YearColumn} from "../types/types/year.column";
 import {IndexColumn} from "../types/constraints/index.column";
 import {UniqueColumn} from "../types/constraints/unique.column";
+import {BinaryColumn} from "../types/types/binary.column";
 
 export class Blueprint {
 
@@ -254,6 +255,14 @@ export class Blueprint {
             .autoincrement()
         this.addConstrainedColumn(new PrimaryColumn([name]))
         return this.addColumn(incrementsColumn);
+    }
+
+    binary(name: string, length: number) {
+        const binaryColumn = new BinaryColumn(
+            name,
+            length
+        );
+        return this.addColumn(binaryColumn);
     }
 
     column(name: string,  type: string) {

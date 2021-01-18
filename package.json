@@ -1,6 +1,6 @@
 {
   "name": "migrationjs",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "migration system for js",
   "main": "index.js",
   "scripts": {
