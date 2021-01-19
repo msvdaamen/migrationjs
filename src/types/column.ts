@@ -1,10 +1,11 @@
+import {ExpressionInterface} from "../interfaces/expression.interface";
 
 const mysql = require('mysql');
 
 export class Column {
     private isNullable = false;
     protected length: number | string = null;
-    private defaultValue: string | number | boolean = null;
+    private defaultValue: string | number | boolean | ExpressionInterface = null;
     private attributes = new Set<string>();
     private changed = false;
     private afterColumn: string = null;
@@ -24,7 +25,7 @@ export class Column {
         return this
     }
 
-    default(defaultValue: string | number | boolean) {
+    default(defaultValue: string | number | boolean | ExpressionInterface) {
         this.defaultValue = defaultValue;
         return this;
     }
@@ -69,6 +70,10 @@ export class Column {
         if (this.defaultValue || typeof this.defaultValue === 'boolean' || typeof this.defaultValue === 'number') {
             if (typeof this.defaultValue === 'string') {
                 columnString += ` DEFAULT '${this.defaultValue}'`;
+            } else if (typeof this.defaultValue === 'object') {
+                if (this.defaultValue.hasOwnProperty('expression')) {
+                    columnString += ` DEFAULT ${this.defaultValue.expression}`;
+                }
             } else {
                 columnString += ` DEFAULT ${this.defaultValue}`;
             }
@@ -98,9 +103,13 @@ export class Column {
             columnString += ` NOT NULL`;
         }
 
-        if (this.defaultValue) {
+        if (this.defaultValue || typeof this.defaultValue === 'boolean' || typeof this.defaultValue === 'number') {
             if (typeof this.defaultValue === 'string') {
                 columnString += ` DEFAULT '${this.defaultValue}'`;
+            } else if (typeof this.defaultValue === 'object') {
+                if (this.defaultValue.hasOwnProperty('expression')) {
+                    columnString += ` DEFAULT ${this.defaultValue.expression}`;
+                }
             } else {
                 columnString += ` DEFAULT ${this.defaultValue}`;
             }

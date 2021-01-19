@@ -3,19 +3,19 @@ import {writeFile} from "../utils/write-file";
 
 
 const migrationContent = (fileName: string) =>
-`import {Migration} from 'migrationjs';
-import {Blueprint} from 'migrationjs';
-import {Schema} from 'migrationjs';
+`import {Migration, Blueprint, Schema} from 'migrationjs';
 
 
 export default class ${fileName} extends Migration {
 
     async up() {
-        throw new Error("Method not implemented.");
+        await Schema.crate('name', (table) => {
+            
+        });
     }
 
     async down() {
-        throw new Error("Method not implemented.");
+        await Schema.dropIfExists('name');
     }
 }
 `

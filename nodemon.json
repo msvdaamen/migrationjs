@@ -2,5 +2,5 @@
     "watch": ["src"],
     "ext": "ts",
     "ignore": ["src/**/*.spec.ts"],
-    "exec": "concurrently --kill-others \"tsc -p . && copy /y package.json dist && Xcopy /y /e /i bin dist\\bin  && copy /y .npmignore dist && npm link ./dist \""
+    "exec": "concurrently --kill-others \"tsc -p . && copy /y package.json dist && Xcopy /y /e /i bin dist\\bin  && copy /y .npmignore dist && copy /y README.md dist && npm link ./dist \""
   }
