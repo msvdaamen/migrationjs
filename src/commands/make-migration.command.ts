@@ -8,14 +8,16 @@ const migrationContent = (fileName: string) =>
 
 export default class ${fileName} extends Migration {
 
+    tableName = 'name';
+
     async up() {
-        await Schema.crate('name', (table) => {
+        await Schema.create(this.tableName, (table) => {
             
         });
     }
 
     async down() {
-        await Schema.dropIfExists('name');
+        await Schema.dropIfExists(this.tableName);
     }
 }
 `
