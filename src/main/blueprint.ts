@@ -289,8 +289,11 @@ export class Blueprint {
         return this.addConstrainedColumn(uniqueColumn);
     }
 
-    primary(...names: string[]) {
-        const primaryColumn = new PrimaryColumn(names);
+    primary(names: string[] | string, customName?: string) {
+        if (typeof names === 'string') {
+            names = [names];
+        }
+        const primaryColumn = new PrimaryColumn(names, customName);
         return this.addConstrainedColumn(primaryColumn);
     }
 
