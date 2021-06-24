@@ -230,8 +230,8 @@ export class Blueprint {
         return this.increments(name, 'big');
     }
 
-    foreign(name: string) {
-        const foreignColumn = new ForeignColumn(name);
+    foreign(name: string, customName?: string) {
+        const foreignColumn = new ForeignColumn(name, customName);
         return this.addConstrainedColumn(foreignColumn);
     }
 

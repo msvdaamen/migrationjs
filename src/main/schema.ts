@@ -24,11 +24,11 @@ export class Schema {
     }
 
     static async drop(name: string) {
-        await query(`DROP TABLE ${name}`)
+        await query(`DROP TABLE ${name}`);
     }
 
     static async dropIfExists(name: string) {
-        await query(`DROP TABLE IF EXISTS ${name}`)
+        await query(`DROP TABLE IF EXISTS ${name}`);
     }
 
     private static async runCreate(name: string, blueprint: Blueprint) {

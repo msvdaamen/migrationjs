@@ -8,11 +8,18 @@ export class ForeignColumn extends ConstrainedColumn {
     private _onUpdate: string;
 
     constructor(
-        private column: string
+        private column: string,
+        private customName?: string
     ) {
         super();
     }
 
+    private getConstrainName(tableName: string) {
+        if (this.customName) {
+            return `${tableName}_${this.customName}`;
+        }
+        return `${tableName}_${this.column}_fk`;
+    }
 
     references(references: string) {
         this._references = references;
@@ -36,7 +43,7 @@ export class ForeignColumn extends ConstrainedColumn {
 
 
     toString(tableName: string) {
-        let foreignString = `INDEX ${tableName}_${this.column}_ind (${this.column}), CONSTRAINT ${tableName}_${this.column}_fk FOREIGN KEY (${this.column}) REFERENCES ${this._on}(${this._references})`;
+        let foreignString = `INDEX ${this.getConstrainName(tableName)} (${this.column}), CONSTRAINT ${this.getConstrainName(tableName)} FOREIGN KEY (${this.column}) REFERENCES ${this._on}(${this._references})`;
 
         if (this._onUpdate) {
             foreignString += ` ON UPDATE ${this._onUpdate}`;
@@ -47,8 +54,9 @@ export class ForeignColumn extends ConstrainedColumn {
         }
         return foreignString;
     }
+
     toStringAlter(tableName: string) {
-        let foreignString = `ADD INDEX ${tableName}_${this.column}_ind (${this.column}), ADD CONSTRAINT ${tableName}_${this.column}_fk FOREIGN KEY (${this.column}) REFERENCES ${this._on}(${this._references})`;
+        let foreignString = `ADD INDEX ${this.getConstrainName(tableName)} (${this.column}), ADD CONSTRAINT ${this.getConstrainName(tableName)} FOREIGN KEY (${this.column}) REFERENCES ${this._on}(${this._references})`;
 
         if (this._onUpdate) {
             foreignString += ` ON UPDATE ${this._onUpdate}`;
