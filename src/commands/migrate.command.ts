@@ -58,29 +58,15 @@ export class MigrateCommand extends Command {
             for(let i = 0; i < newMigrations.length; i++) {
                 const migration = newMigrations[i];
                 const subFilename = migration.substr(0, migration.lastIndexOf("."));
-                // const file = await import(path.join(globalPath, migrationsPath, migration));
                 const file =  await compileTsFiles(globalPath, migrationsPath, migration);
                 if (file.default.prototype.up && file.default.prototype.down) {
                     const t: Migration = new file.default();
+                    console.log(`migrating: ${subFilename}`);
                     await t.up();
                     await query(SQL`insert into migrations (migration, batch) values (${subFilename}, ${batchNumber})`);
                     console.log(`migrated: ${subFilename}`);
                 }
             }
-
-            // for(let i = 0; i < newMigrations.length; i++) {
-            //     const filename = filenames[i];
-            //     const subFilename = filename.substr(0, filename.lastIndexOf("."));
-            //     const fleType = path.extname(path.join(globalPath, migrationsPath, filename));
-            //     if (fleType === '.js') {
-            //         const file = await import(path.join(globalPath, migrationsPath, filename));
-            //         if (file.default.prototype.up && file.default.prototype.down) {
-            //             const t: Migration = new file.default();
-            //             await t.up();
-            //             await query(SQL`insert into migrations (migration, batch) values (${subFilename}, 1)`);
-            //         }
-            //     }
-            // }
             return true;
         } catch (e) {
             console.log('error: ' + e);
