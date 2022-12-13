@@ -14,5 +14,5 @@ export abstract class Command {
         return this.registry.get(name);
     }
 
-    abstract async run(arg: string);
+    abstract run(arg: string): Promise<void>;
 }

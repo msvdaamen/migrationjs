@@ -1,6 +1,8 @@
 import {Command} from "./command";
-import {writeFile} from "../utils/write-file";
-
+import * as fs from "fs/promises";
+import {Config} from "../interfaces/config.interface";
+import * as path from "path";
+import chalk from "chalk";
 enum MigrationType {
     CREATE = 'create',
     ALTER = 'table'
@@ -39,13 +41,16 @@ export default class ${fileName} extends Migration {
 
 export class MakeMigrationCommand extends Command {
     async run(name: string): Promise<any> {
-        const config = require(process.cwd() + '/migrationjs.conf.json');
+        const configString = await fs.readFile(path.join(process.cwd(), 'migrationjs.conf.json'), {encoding: 'utf-8'});
+        const config: Config = JSON.parse(configString);
         const rootPath = process.cwd();
         const date = new Date();
         const dateString = `${date.getFullYear()}_${this.appendZero(date.getMonth())}_${this.appendZero(date.getDate())}_${this.appendZero(date.getHours())}${this.appendZero(date.getMinutes())}${this.appendZero(date.getSeconds())}`;
         const migrationFileName = `${rootPath}/${config.folderName}/${dateString}_${name}.ts`;
         const tableName = this.extractTableName(name);
-        await writeFile(migrationFileName, migrationContent(name, tableName?.type, tableName?.name), {});
+        await fs.writeFile(migrationFileName, migrationContent(name, tableName?.type, tableName?.name), {});
+        const migrationName = `${dateString}_${name}`;
+        console.log(chalk.green(`Created Migration: `) + migrationName);
         return Promise.resolve();
     }
 

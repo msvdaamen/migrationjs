@@ -1,7 +1,5 @@
 import {ExpressionInterface} from "../interfaces/expression.interface";
 
-const mysql = require('mysql');
-
 export class Column {
     private isNullable = false;
     protected length: number | string = null;

@@ -1,20 +1,18 @@
 import {Blueprint} from "./blueprint";
 import {query} from "../db/connection";
 
-const SQL = require('sql-template-strings')
-
 export class Schema {
 
     // creates table
     static async create(name: string, create: (blueprint: Blueprint) => void) {
-        const blueprint = new Blueprint();
+        const blueprint = new Blueprint(name);
         create(blueprint);
         await this.runCreate(name, blueprint);
     }
 
     // alters table
     static async table(name: string, alter: (blueprint: Blueprint) => void) {
-        const blueprint = new Blueprint();
+        const blueprint = new Blueprint(name);
         alter(blueprint);
         await this.runAlter(name, blueprint);
     }
@@ -48,6 +46,14 @@ export class Schema {
             const tables = [...columnStrings, ...constraintStrings].join(',');
             const createString = `alter table ${name} ${tables}`;
             await query(createString);
+        }
+        if (blueprint.getForeignDrops().length) {
+            for (const column of blueprint.getForeignDrops()) {
+                const queryStringForeign = `alter table ${name} drop foreign key ${column};`;
+                const queryStringIndex = `alter table ${name} drop index ${column};`;
+                await query(queryStringForeign);
+                await query(queryStringIndex);
+            }
         }
         if (blueprint.getColumnDrops().length > 0) {
             const columns = blueprint.getColumnDrops().map(columnName => `DROP COLUMN ${columnName}`);

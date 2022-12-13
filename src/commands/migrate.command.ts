@@ -2,24 +2,26 @@ import {Command} from "./command";
 import {checkMigrationTable, getExistingMigrations, query, removeAllTables, setupDbConnection} from "../db/connection";
 import {readdir} from "../utils/readdir";
 import {Migration} from "../main/migration";
-import {Config} from "../interfaces/config,interface";
+import {Config} from "../interfaces/config.interface";
 import {compileTsFiles} from "../utils/compilets";
-const path = require('path');
-const SQL = require('sql-template-strings');
+import * as path from 'path';
+import chalk from 'chalk';
+import fs from "fs/promises";
 
 export class MigrateCommand extends Command {
 
     async run(): Promise<any> {
-        const config = require(process.cwd() + '/migrationjs.conf.json');
-        if (!config) {
+        const configString = await fs.readFile(path.join(process.cwd(), 'migrationjs.conf.json'), {encoding: 'utf-8'});
+        if (!configString) {
             throw Error('No migrationjs.conf.json in project root');
         }
+        const config: Config = JSON.parse(configString);
         return this.migrate(process.cwd(), config);
     }
 
     async migrate(globalPath: string, config: Config) {
 
-        setupDbConnection(config.database);
+        await setupDbConnection(config.database);
 
         // await removeAllTables();
 
@@ -56,20 +58,23 @@ export class MigrateCommand extends Command {
             }
 
             for(let i = 0; i < newMigrations.length; i++) {
+                const timeFrom = performance.now();
                 const migration = newMigrations[i];
                 const subFilename = migration.substr(0, migration.lastIndexOf("."));
                 const file =  await compileTsFiles(globalPath, migrationsPath, migration);
                 if (file.default.prototype.up && file.default.prototype.down) {
                     const t: Migration = new file.default();
-                    console.log(`migrating: ${subFilename}`);
+                    console.log(chalk.yellow(`Migrating: `) + subFilename);
                     await t.up();
-                    await query(SQL`insert into migrations (migration, batch) values (${subFilename}, ${batchNumber})`);
-                    console.log(`migrated: ${subFilename}`);
+                    await query(`insert into migrations (migration, batch) values (?, ?)`, [subFilename, batchNumber]);
+                    const timeUntil = performance.now();
+                    const timeTaken = (timeUntil - timeFrom).toFixed(2);
+                    console.log(chalk.green(`Migrated: `) + `${subFilename} (${timeTaken}ms)`);
                 }
             }
             return true;
         } catch (e) {
-            console.log('error: ' + e);
+            console.log(chalk.red('error: ' + e));
             return true;
         }
     }

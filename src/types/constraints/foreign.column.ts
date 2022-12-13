@@ -16,7 +16,7 @@ export class ForeignColumn extends ConstrainedColumn {
 
     private getConstrainName(tableName: string) {
         if (this.customName) {
-            return `${tableName}_${this.customName}`;
+            return this.customName;
         }
         return `${tableName}_${this.column}_fk`;
     }

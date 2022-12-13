@@ -25,6 +25,10 @@ export class Blueprint {
     private columns: Column[] = [];
     private constraints: ConstrainedColumn[] = [];
     private columnDrops: string[] = [];
+    private foreignDrops: string[] = [];
+
+    constructor(private tableName: string) {
+    }
 
     year(name: string) {
         const yearColumn = new YearColumn(
@@ -279,6 +283,14 @@ export class Blueprint {
         }
     }
 
+    dropForeign(name: string, customName: string = null) {
+        if (customName) {
+            this.foreignDrops.push(customName);
+            return;
+        }
+        this.foreignDrops.push(`${this.tableName}_${name}_fk`);
+    }
+
     index(name: string | string[]) {
         const indexColumn = new IndexColumn(name);
         return this.addConstrainedColumn(indexColumn);
@@ -317,5 +329,9 @@ export class Blueprint {
 
     getColumnDrops() {
         return this.columnDrops;
+    }
+
+    getForeignDrops() {
+        return this.foreignDrops;
     }
 }

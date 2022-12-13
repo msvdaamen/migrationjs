@@ -11,7 +11,7 @@ export class PrimaryColumn extends ConstrainedColumn {
 
     private getConstrainName(tableName: string) {
         if (this.customName) {
-            return `${tableName}_${this.customName}`;
+            return this.customName;
         }
         return `${tableName}_${this.keys.join('_')}_pk`
     }
