@@ -11,6 +11,10 @@ a {
     text-align: center;
     display: block;
 }
+
+img {
+    width: 100%;
+}
 </style>
 # MigrationJS
 
