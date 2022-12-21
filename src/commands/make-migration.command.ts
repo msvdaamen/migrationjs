@@ -18,7 +18,7 @@ const upString = (action: string, tableName: string) => {
     if (!tableName) {
         return '';
     }
-    return `await Schema.${action ? action : 'create'}('${tableName}', (table) => {
+    return `await Schema.${action ? action : 'create'}('${tableName}', (table: Blueprint) => {
             
         });`
 }
@@ -29,11 +29,11 @@ const migrationContent = (fileName: string, action: string = null, tableName: st
 
 export default class ${fileName} extends Migration {
 
-    async up() {
+    async up(): Promise<void> {
         ${upString(action, tableName)}
     }
 
-    async down() {
+    async down(): Promise<void> {
         ${action === 'create' ? dropExistString(tableName) : ''}
     }
 }
