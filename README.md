@@ -37,8 +37,8 @@ The available commands are:
 > **rollback**  
 > This command executes the `down` function of the migrations of the latest batch.  
 
-> **make:migration**  
-> This command creates a migration file.  
+> **make:migration \<migration name\>**  
+> This command creates a migration file. The name has to start with `create` if you want to generate a create-table migration template, or `alter` for an alter-table migration template
 
 > **make:config**  
 > This command creates a `migrationjs.conf.json` file where you can configure your settings of MigrationJS.  
