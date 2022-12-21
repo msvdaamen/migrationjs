@@ -4,7 +4,7 @@ import * as fs from "fs/promises";
 import * as fss from "fs";
 
 
-export class GenerateConfigCommand extends Command {
+export class MakeConfigCommand extends Command {
 
     async run(): Promise<any> {
         const hasConfig = fss.existsSync(path.join(process.cwd(), 'migrationjs.conf.json'));
