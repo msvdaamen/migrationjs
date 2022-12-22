@@ -1,21 +1,3 @@
-<style>
-* {
-    font-family: monospace;
-}
-h1, h3 {
-    color: #7b7bff;
-}
-
-a {
-    color: #7b7bff;
-    text-align: center;
-    display: block;
-}
-
-img {
-    width: 100%;
-}
-</style>
 # MigrationJS
 
 MigrationJS is a database migration package for NodeJS.
