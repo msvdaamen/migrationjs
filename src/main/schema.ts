@@ -34,7 +34,7 @@ export class Schema {
             const columnStrings = blueprint.getColumns().map(column => column.toString());
             const constraintStrings = blueprint.getConstraints().map(column => column.toString(name));
             const tables = [...columnStrings, ...constraintStrings].join(',');
-            const createString = `create table ${name} (${tables})`;
+            const createString = `create table ${'`' + name + '`'} (${tables})`;
             await query(createString);
         }
     }
@@ -44,20 +44,21 @@ export class Schema {
             const columnStrings = blueprint.getColumns().map(column => column.toStringAlter());
             const constraintStrings = blueprint.getConstraints().map(column => column.toStringAlter(name));
             const tables = [...columnStrings, ...constraintStrings].join(',');
-            const createString = `alter table ${name} ${tables}`;
+            const createString = `alter table ${'`' + name + '`'} ${tables}`;
+            console.log(createString);
             await query(createString);
         }
         if (blueprint.getForeignDrops().length) {
             for (const column of blueprint.getForeignDrops()) {
-                const queryStringForeign = `alter table ${name} drop foreign key ${column};`;
-                const queryStringIndex = `alter table ${name} drop index ${column};`;
+                const queryStringForeign = `alter table ${'`' + name + '`'} drop foreign key ${column};`;
+                const queryStringIndex = `alter table${'`' + name + '`'} drop index ${column};`;
                 await query(queryStringForeign);
                 await query(queryStringIndex);
             }
         }
         if (blueprint.getColumnDrops().length > 0) {
             const columns = blueprint.getColumnDrops().map(columnName => `DROP COLUMN ${columnName}`);
-            const queryString = `alter table ${name} ${columns.join(',')}`;
+            const queryString = `alter table ${'`' + name + '`'} ${columns.join(',')}`;
             await query(queryString);
         }
 

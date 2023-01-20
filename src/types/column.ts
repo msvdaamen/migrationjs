@@ -76,6 +76,7 @@ export class Column {
                 columnString += ` DEFAULT ${this.defaultValue}`;
             }
         }
+        console.log(columnString);
         return columnString;
     }
 
@@ -88,7 +89,7 @@ export class Column {
             columnString += 'ADD '
         }
 
-        columnString += `${this.name} ${this.type}`;
+        columnString += `${'`' + this.name + '`'} ${this.type}`;
         if (this.length) {
             columnString += ` (${this.length})`
         }
