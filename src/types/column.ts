@@ -115,7 +115,7 @@ export class Column {
         }
 
         if (this.afterColumn) {
-            columnString += ` AFTER ${this.afterColumn}`
+            columnString += ` AFTER ${'`' + this.afterColumn + '`'}`
         }
 
         return columnString;

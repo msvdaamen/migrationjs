@@ -18,15 +18,15 @@ export class Schema {
     }
 
     static async rename(from: string, to: string) {
-        await query(`RENAME TABLE ${from} TO ${to}`)
+        await query(`RENAME TABLE ${'`' + from + '`'} TO ${'`' + to + '`'}`)
     }
 
     static async drop(name: string) {
-        await query(`DROP TABLE ${name}`);
+        await query(`DROP TABLE ${'`' + name + '`'}`);
     }
 
     static async dropIfExists(name: string) {
-        await query(`DROP TABLE IF EXISTS ${name}`);
+        await query(`DROP TABLE IF EXISTS ${'`' + name + '`'}`);
     }
 
     private static async runCreate(name: string, blueprint: Blueprint) {
@@ -50,14 +50,14 @@ export class Schema {
         }
         if (blueprint.getForeignDrops().length) {
             for (const column of blueprint.getForeignDrops()) {
-                const queryStringForeign = `alter table ${'`' + name + '`'} drop foreign key ${column};`;
-                const queryStringIndex = `alter table${'`' + name + '`'} drop index ${column};`;
+                const queryStringForeign = `alter table ${'`' + name + '`'} drop foreign key ${'`' + column + '`'};`;
+                const queryStringIndex = `alter table ${'`' + name + '`'} drop index ${'`' + column + '`'};`;
                 await query(queryStringForeign);
                 await query(queryStringIndex);
             }
         }
         if (blueprint.getColumnDrops().length > 0) {
-            const columns = blueprint.getColumnDrops().map(columnName => `DROP COLUMN ${columnName}`);
+            const columns = blueprint.getColumnDrops().map(columnName => `DROP COLUMN ${'`' + columnName + '`'}`);
             const queryString = `alter table ${'`' + name + '`'} ${columns.join(',')}`;
             await query(queryString);
         }
