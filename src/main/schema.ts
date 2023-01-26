@@ -45,7 +45,6 @@ export class Schema {
             const constraintStrings = blueprint.getConstraints().map(column => column.toStringAlter(name));
             const tables = [...columnStrings, ...constraintStrings].join(',');
             const createString = `alter table ${'`' + name + '`'} ${tables}`;
-            console.log(createString);
             await query(createString);
         }
         if (blueprint.getForeignDrops().length) {

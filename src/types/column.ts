@@ -76,7 +76,6 @@ export class Column {
                 columnString += ` DEFAULT ${this.defaultValue}`;
             }
         }
-        console.log(columnString);
         return columnString;
     }
 
