@@ -7,6 +7,7 @@ import * as fs from "fs/promises";
 import * as fss from "fs";
 import path from "path";
 import chalk from 'chalk';
+import {performance} from 'perf_hooks';
 
 export class RollbackCommand extends Command {
 

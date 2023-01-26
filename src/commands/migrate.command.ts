@@ -7,6 +7,7 @@ import {compileTsFiles} from "../utils/compilets";
 import * as path from 'path';
 import chalk from 'chalk';
 import fs from "fs/promises";
+import {performance} from 'perf_hooks';
 
 export class MigrateCommand extends Command {
 
