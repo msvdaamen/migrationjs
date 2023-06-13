@@ -3,7 +3,7 @@
 
 export abstract class ConstrainedColumn {
 
-    abstract toString(tableName: string);
+    abstract toString(tableName: string): string;
 
-    abstract toStringAlter(tableName: string);
+    abstract toStringAlter(tableName: string): string;
 }

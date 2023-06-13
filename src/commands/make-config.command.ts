@@ -2,6 +2,7 @@ import {Command} from "./command";
 import path from "path";
 import * as fs from "fs/promises";
 import * as fss from "fs";
+import {Config} from "../interfaces/config.interface";
 
 
 export class MakeConfigCommand extends Command {
@@ -9,13 +10,14 @@ export class MakeConfigCommand extends Command {
     async run(): Promise<any> {
         const hasConfig = fss.existsSync(path.join(process.cwd(), 'migrationjs.conf.json'));
         if (!hasConfig) {
-            const newConfig = {
+            const newConfig: Config = {
                 database: {
-                    type: 'mysql',
+                    driver: 'mysql',
                     host: 'localhost',
                     user: 'root',
                     password: '',
-                    database: ''
+                    database: '',
+                    port: 3306
                 },
                 folderName: 'migrations'
             };

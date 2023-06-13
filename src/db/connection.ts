@@ -6,7 +6,7 @@ import {PostgresDriver} from "./drivers/postgres.driver";
 
 let driver: Driver;
 export async function setupDbConnection(database: DatabaseConfig): Promise<Driver> {
-    switch (database.type) {
+    switch (database.driver) {
         case 'mysql':
             driver = new MysqlDriver();
             break;
@@ -14,7 +14,7 @@ export async function setupDbConnection(database: DatabaseConfig): Promise<Drive
             driver = new PostgresDriver();
             break;
         default:
-            throw new Error(`Driver ${database.type} not supported`);
+            throw new Error(`Driver ${database.driver} not supported`);
     }
     await driver.init(database);
     return driver;

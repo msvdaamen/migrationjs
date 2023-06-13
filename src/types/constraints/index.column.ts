@@ -3,23 +3,30 @@ import {ConstrainedColumn} from "../constrained.column";
 
 export class IndexColumn extends ConstrainedColumn {
 
-    private name: string[];
+    private readonly columns: string[];
+    private readonly customName?: string;
 
-    constructor(name: string | string[]) {
+    constructor(columns: string | string[], customName?: string) {
         super();
-        if (!Array.isArray(name)) {
-            name = [name];
+        if (!Array.isArray(columns)) {
+            columns = [columns];
         }
-        this.name = name;
+        this.columns = columns;
+        this.customName = customName;
+    }
+
+    private getName(tableName: string) {
+        if (this.customName) {
+            return this.customName;
+        }
+        return `${tableName}_${this.columns.join('_')}_idx`;
     }
 
     toString(tableName: string): string {
-        return this.name.map(name => {
-            return `INDEX ${tableName}_${name} (${name})`
-        }).join(', ')
+        return `CREATE INDEX ${this.getName(tableName)} ON ${tableName} (${this.columns.join(', ')})`;
     }
 
     toStringAlter(tableName: string) {
-        return `ADD INDEX (${tableName}_${this.name.join(', ')})`;
+        return `ADD INDEX (${tableName}_${this.columns.join(', ')})`;
     }
 }

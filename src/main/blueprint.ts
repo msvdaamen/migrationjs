@@ -237,7 +237,9 @@ export class Blueprint {
 
     foreign(name: string, customName?: string) {
         const foreignColumn = new ForeignColumn(name, customName);
-        return this.addConstrainedColumn(foreignColumn);
+        this.addConstrainedColumn(foreignColumn);
+        this.index(name, customName);
+        return foreignColumn;
     }
 
     id() {
@@ -301,8 +303,8 @@ export class Blueprint {
         this.foreignDrops.push(`${this.tableName}_${name}_fk`);
     }
 
-    index(name: string | string[]) {
-        const indexColumn = new IndexColumn(name);
+    index(name: string | string[], customName?: string) {
+        const indexColumn = new IndexColumn(name, customName);
         return this.addConstrainedColumn(indexColumn);
     }
 

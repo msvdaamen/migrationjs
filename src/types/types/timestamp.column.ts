@@ -1,4 +1,5 @@
 import {Column} from "../column";
+import {Schema} from "../../main/schema";
 
 export class TimestampColumn extends Column {
 
@@ -11,6 +12,9 @@ export class TimestampColumn extends Column {
     }
 
     onUpdate() {
-        return this.addAttribute('ON UPDATE CURRENT_TIMESTAMP');
+        if (Schema.driver.type === 'mysql') {
+            return this.addAttribute('ON UPDATE CURRENT_TIMESTAMP');
+        }
+        return this;
     }
 }

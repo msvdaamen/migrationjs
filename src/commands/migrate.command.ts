@@ -2,27 +2,18 @@ import {Command} from "./command";
 import {setupDbConnection} from "../db/connection";
 import {readdir} from "../utils/readdir";
 import {Migration} from "../main/migration";
-import {Config} from "../interfaces/config.interface";
 import {compileTsFiles} from "../utils/compilets";
 import * as path from 'path';
 import chalk from 'chalk';
-import fs from "fs/promises";
 import {performance} from 'perf_hooks';
 import {Schema} from "../main/schema";
+import {getConfig} from "../utils/get-config";
 
 export class MigrateCommand extends Command {
 
-    async run(): Promise<any> {
-        const configString = await fs.readFile(path.join(process.cwd(), 'migrationjs.conf.json'), {encoding: 'utf-8'});
-        if (!configString) {
-            throw Error('No migrationjs.conf.json in project root');
-        }
-        const config: Config = JSON.parse(configString);
-        return this.migrate(process.cwd(), config);
-    }
-
-    async migrate(globalPath: string, config: Config) {
-
+    async run(): Promise<void> {
+        const globalPath = process.cwd();
+        const config = await getConfig();
         const dbDriver = await setupDbConnection(config.database);
         await dbDriver.checkMigrationTable();
 
@@ -72,10 +63,8 @@ export class MigrateCommand extends Command {
                     console.log(chalk.green(`Migrated: `) + `${subFilename} (${timeTaken}ms)`);
                 }
             }
-            return true;
         } catch (e) {
             console.log(chalk.red('error: ' + e));
-            return true;
         }
     }
 

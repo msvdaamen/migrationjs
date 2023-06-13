@@ -1,7 +1,7 @@
 import {DatabaseDriver} from "../types/database.driver";
 
 export interface DatabaseConfig {
-    type: DatabaseDriver;
+    driver: DatabaseDriver;
     host: string;
     user: string;
     password: string;
