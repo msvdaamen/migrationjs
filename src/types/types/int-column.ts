@@ -4,13 +4,13 @@ import {Column} from "../column";
 export class IntColumn extends Column {
 
     constructor(name: string, size: IntSizeType = 'normal') {
-        let type = 'int'
+        let type = 'INT'
 
         switch (size) {
-            case 'tiny': type = 'tinyint'; break;
-            case 'small': type = 'smallint'; break;
-            case 'medium': type = 'mediumint'; break;
-            case 'big': type = 'bigint'; break;
+            case 'tiny': type = 'TINYINT'; break;
+            case 'small': type = 'SMALLINT'; break;
+            case 'medium': type = 'MEDIUMINT'; break;
+            case 'big': type = 'BIGINT'; break;
         }
         super(name, type);
     }

@@ -1,5 +1,5 @@
 import {Command} from "./command";
-import {query, setupDbConnection} from "../db/connection";
+import {setupDbConnection} from "../db/connection";
 import {Config} from "../interfaces/config.interface";
 import {compileTsFiles} from "../utils/compilets";
 import {Migration} from "../main/migration";
@@ -8,6 +8,7 @@ import * as fss from "fs";
 import path from "path";
 import chalk from 'chalk';
 import {performance} from 'perf_hooks';
+import {Schema} from "../main/schema";
 
 export class RollbackCommand extends Command {
 
@@ -22,15 +23,15 @@ export class RollbackCommand extends Command {
 
 
     async rollback(globalPath: string, config: Config) {
-        await setupDbConnection(config.database);
+        const dbDriver = await setupDbConnection(config.database);
 
-        const result = await query(`select batch from migrations order by batch desc limit 1`);
+        const result = await dbDriver.query(`select batch from migrations order by batch desc limit 1`);
         if(result.length === 0) {
             throw Error('there or no migration');
         }
         const lastMigrationBatchNumber = result[0].batch;
 
-        const migrations = await query(`select * from migrations where batch = ? order by id desc`, [lastMigrationBatchNumber]);
+        const migrations = await dbDriver.query(`select * from migrations where batch = ${lastMigrationBatchNumber} order by id desc`);
 
 
         try {
@@ -44,11 +45,12 @@ export class RollbackCommand extends Command {
                     const file =  await compileTsFiles(globalPath, migrationsPath, fileName);
                     if (file.default.prototype.up && file.default.prototype.down) {
                         const t: Migration = new file.default();
+                        Schema.setDriver(dbDriver);
                         await t.down();
-                        await query(`delete from migrations where id = ?`, [migration.id]);
+                        await dbDriver.query(`delete from migrations where id = ${migration.id}`);
                     }
                 } else {
-                    await query(`delete from migrations where id = ?`, [migration.id]);
+                    await dbDriver.query(`delete from migrations where id = ${migration.id}`);
                 }
                 const timeUntil = performance.now();
                 const timeTaken = (timeUntil - timeFrom).toFixed(2);

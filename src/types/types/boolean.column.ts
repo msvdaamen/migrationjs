@@ -1,5 +1,5 @@
 import {Column} from "../column";
-
+import {Schema} from "../../main/schema";
 
 export class BooleanColumn extends Column {
 
@@ -7,13 +7,9 @@ export class BooleanColumn extends Column {
         super(name, 'boolean');
     }
 
-    default(defaultValue: boolean | 0 | 1): this {
-        if (typeof defaultValue === 'boolean') {
-            defaultValue = defaultValue ? 1 : 0;
-        } else if (typeof defaultValue === 'number') {
-            if (defaultValue > 1) {
-                defaultValue = 1;
-            }
+    default(defaultValue: boolean): this {
+        if (Schema.driver.type === 'mysql') {
+            return super.default(defaultValue ? 1 : 0);
         }
         return super.default(defaultValue);
     }

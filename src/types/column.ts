@@ -1,4 +1,5 @@
 import {ExpressionInterface} from "../interfaces/expression.interface";
+import {enQuote} from "../db/connection";
 
 export class Column {
     private isNullable = false;
@@ -7,6 +8,7 @@ export class Column {
     private attributes = new Set<string>();
     private changed = false;
     private afterColumn: string = null;
+    private generatedAsExpression: string = 'GENERATED';
 
     constructor(
         private name: string,
@@ -37,6 +39,16 @@ export class Column {
         return this.addAttribute('UNIQUE');
     }
 
+    generatedAs(expression: string = 'IDENTITY') {
+        return this.addAttribute(`GENERATED ${this.generatedAsExpression} AS ${expression}`);
+    }
+
+    always() {
+        this.generatedAsExpression = 'ALWAYS';
+        return this;
+    }
+
+
     setLength(length: number | string, decimalLength: number = null) {
         if (length && decimalLength) {
             this.length = `${length},${decimalLength}`;
@@ -52,7 +64,7 @@ export class Column {
     }
 
     toString() {
-        let columnString = `${'`' + this.name + '`'} ${this.type}`
+        let columnString = `${enQuote(this.name)} ${this.type}`
         if (this.length) {
             columnString += ` (${this.length})`
         }
@@ -62,7 +74,7 @@ export class Column {
         }
 
         if (!this.isNullable) {
-            columnString += ` NOT NULL`;
+            // columnString += ` NOT NULL`;
         }
 
         if (this.defaultValue || typeof this.defaultValue === 'boolean' || typeof this.defaultValue === 'number') {
@@ -88,7 +100,7 @@ export class Column {
             columnString += 'ADD '
         }
 
-        columnString += `${'`' + this.name + '`'} ${this.type}`;
+        columnString += `${enQuote(this.name)} ${this.type}`;
         if (this.length) {
             columnString += ` (${this.length})`
         }
@@ -114,7 +126,7 @@ export class Column {
         }
 
         if (this.afterColumn) {
-            columnString += ` AFTER ${'`' + this.afterColumn + '`'}`
+            columnString += ` AFTER ${enQuote(this.afterColumn)}`
         }
 
         return columnString;

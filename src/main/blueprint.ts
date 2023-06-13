@@ -19,6 +19,7 @@ import {YearColumn} from "../types/types/year.column";
 import {IndexColumn} from "../types/constraints/index.column";
 import {UniqueColumn} from "../types/constraints/unique.column";
 import {BinaryColumn} from "../types/types/binary.column";
+import {Driver} from "../db/driver";
 
 export class Blueprint {
 
@@ -27,7 +28,7 @@ export class Blueprint {
     private columnDrops: string[] = [];
     private foreignDrops: string[] = [];
 
-    constructor(private tableName: string) {
+    constructor(private tableName: string, private driver: Driver) {
     }
 
     year(name: string) {
@@ -255,8 +256,17 @@ export class Blueprint {
         const incrementsColumn = new IntColumn(
             name,
             size
-        ).unsigned()
-            .autoincrement()
+        );
+        switch(this.driver.type) {
+            case "mysql": {
+                incrementsColumn.unsigned().autoincrement();
+                break;
+            }
+            case "postgres": {
+                incrementsColumn.always().generatedAs();
+                break;
+            }
+        }
         this.addConstrainedColumn(new PrimaryColumn([name]))
         return this.addColumn(incrementsColumn);
     }

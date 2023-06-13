@@ -1,5 +1,5 @@
 import {Command} from "./command";
-import {checkMigrationTable, getExistingMigrations, query, removeAllTables, setupDbConnection} from "../db/connection";
+import {setupDbConnection} from "../db/connection";
 import {readdir} from "../utils/readdir";
 import {Migration} from "../main/migration";
 import {Config} from "../interfaces/config.interface";
@@ -8,6 +8,7 @@ import * as path from 'path';
 import chalk from 'chalk';
 import fs from "fs/promises";
 import {performance} from 'perf_hooks';
+import {Schema} from "../main/schema";
 
 export class MigrateCommand extends Command {
 
@@ -22,17 +23,14 @@ export class MigrateCommand extends Command {
 
     async migrate(globalPath: string, config: Config) {
 
-        await setupDbConnection(config.database);
+        const dbDriver = await setupDbConnection(config.database);
+        await dbDriver.checkMigrationTable();
 
-        // await removeAllTables();
-
-        await checkMigrationTable();
-
-        const existingMigrations = await getExistingMigrations();
+        const existingMigrations = await dbDriver.getExistingMigrations();
         const migrationSet = new Set<string>();
         existingMigrations.forEach(migration => {
-            migrationSet.add(migration.migration);
-        })
+            migrationSet.add(migration);
+        });
 
         const migrationsPath = config.folderName;
 
@@ -52,7 +50,7 @@ export class MigrateCommand extends Command {
 
             const newMigrations = Array.from(newMigrationSet);
 
-            const result = await query(`select max(batch) as max from migrations`);
+            const result = await dbDriver.query(`select max(batch) as max from migrations`);
             let batchNumber = 1;
             if (result[0].max) {
                 batchNumber = (result[0].max + 1);
@@ -65,9 +63,10 @@ export class MigrateCommand extends Command {
                 const file =  await compileTsFiles(globalPath, migrationsPath, migration);
                 if (file.default.prototype.up && file.default.prototype.down) {
                     const t: Migration = new file.default();
+                    Schema.setDriver(dbDriver);
                     console.log(chalk.yellow(`Migrating: `) + subFilename);
                     await t.up();
-                    await query(`insert into migrations (migration, batch) values (?, ?)`, [subFilename, batchNumber]);
+                    await dbDriver.query(`insert into migrations (migration, batch) values ('${subFilename}', ${batchNumber})`);
                     const timeUntil = performance.now();
                     const timeTaken = (timeUntil - timeFrom).toFixed(2);
                     console.log(chalk.green(`Migrated: `) + `${subFilename} (${timeTaken}ms)`);

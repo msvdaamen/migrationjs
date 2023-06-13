@@ -3,6 +3,7 @@ import * as fs from "fs/promises";
 import {Config} from "../interfaces/config.interface";
 import * as path from "path";
 import chalk from "chalk";
+
 enum MigrationType {
     CREATE = 'create',
     ALTER = 'table'
@@ -40,9 +41,11 @@ export default class ${fileName} extends Migration {
 `;
 
 export class MakeMigrationCommand extends Command {
+
     async run(name: string): Promise<any> {
         const configString = await fs.readFile(path.join(process.cwd(), 'migrationjs.conf.json'), {encoding: 'utf-8'});
         const config: Config = JSON.parse(configString);
+        await this.checkMigrationFolder(config.folderName);
         const rootPath = process.cwd();
         const date = new Date();
         const dateString = `${date.getFullYear()}_${this.appendZero(date.getMonth())}_${this.appendZero(date.getDate())}_${this.appendZero(date.getHours())}${this.appendZero(date.getMinutes())}${this.appendZero(date.getSeconds())}`;
@@ -89,6 +92,14 @@ export class MakeMigrationCommand extends Command {
             }
         }
         return null;
+    }
+
+    async checkMigrationFolder(folderName: string) {
+        try {
+            await fs.access(path.join(process.cwd(), folderName));
+        } catch (e) {
+            await fs.mkdir(path.join(process.cwd(), folderName), {recursive: true});
+        }
     }
 
 }

@@ -11,6 +11,7 @@ export class MakeConfigCommand extends Command {
         if (!hasConfig) {
             const newConfig = {
                 database: {
+                    type: 'mysql',
                     host: 'localhost',
                     user: 'root',
                     password: '',
@@ -18,7 +19,7 @@ export class MakeConfigCommand extends Command {
                 },
                 folderName: 'migrations'
             };
-            const json = JSON.stringify(newConfig);
+            const json = JSON.stringify(newConfig, null, 2);
             await fs.writeFile(process.cwd() + '/migrationjs.conf.json', json, {});
         } else {
             throw Error('There is already an migrationjs.conf.json file');
