@@ -28,5 +28,4 @@ export class MakeConfigCommand extends Command {
         }
         return Promise.resolve();
     }
-
 }

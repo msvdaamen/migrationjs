@@ -1,5 +1,5 @@
 import {ExpressionInterface} from "../interfaces/expression.interface";
-import {enQuote} from "../db/connection";
+import {Schema} from "../main/schema";
 
 export class Column {
     private isNullable = false;
@@ -64,7 +64,7 @@ export class Column {
     }
 
     toString() {
-        let columnString = `${enQuote(this.name)} ${this.type}`
+        let columnString = `${Schema.enQuote(this.name)} ${this.type}`
         if (this.length) {
             columnString += ` (${this.length})`
         }
@@ -100,7 +100,7 @@ export class Column {
             columnString += 'ADD '
         }
 
-        columnString += `${enQuote(this.name)} ${this.type}`;
+        columnString += `${Schema.enQuote(this.name)} ${this.type}`;
         if (this.length) {
             columnString += ` (${this.length})`
         }
@@ -126,7 +126,7 @@ export class Column {
         }
 
         if (this.afterColumn) {
-            columnString += ` AFTER ${enQuote(this.afterColumn)}`
+            columnString += ` AFTER ${Schema.enQuote(this.afterColumn)}`
         }
 
         return columnString;

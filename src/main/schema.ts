@@ -1,9 +1,6 @@
 import {Blueprint} from "./blueprint";
-import {enQuote, query} from "../db/connection";
-import {DatabaseDriver} from "../types/database.driver";
 import {Driver} from "../db/driver";
 import {IndexColumn} from "../types/constraints/index.column";
-import {ConstrainedColumn} from "../types/constrained.column";
 
 export class Schema {
     public static driver: Driver;
@@ -23,15 +20,15 @@ export class Schema {
     }
 
     static async rename(from: string, to: string) {
-        await query(`RENAME TABLE ${from} TO ${to}`)
+        await Schema.query(`RENAME TABLE ${from} TO ${to}`)
     }
 
     static async drop(name: string) {
-        await query(`DROP TABLE ${name}`);
+        await Schema.query(`DROP TABLE ${name}`);
     }
 
     static async dropIfExists(name: string) {
-        await query(`DROP TABLE IF EXISTS ${name}`);
+        await Schema.query(`DROP TABLE IF EXISTS ${name}`);
     }
 
     private static async runCreate(name: string, blueprint: Blueprint) {
@@ -48,9 +45,9 @@ export class Schema {
             }
             const tables = [...columnStrings, ...constraintStrings].join(',');
             const createString = `create table ${name} (${tables})`;
-            await query(createString);
+            await Schema.query(createString);
             for (const index of indexStrings) {
-                await query(index);
+                await Schema.query(index);
             }
         }
     }
@@ -66,26 +63,35 @@ export class Schema {
                 } else {
                     constraintStrings.push(column.toString(name));
                 }
-            }            const tables = [...columnStrings, ...constraintStrings].join(',');
+            }
+            const tables = [...columnStrings, ...constraintStrings].join(',');
             const createString = `alter table ${name} ${tables}`;
-            await query(createString);
+            await Schema.query(createString);
             for (const index of indexStrings) {
-                await query(index);
+                await Schema.query(index);
             }
         }
         if (blueprint.getForeignDrops().length) {
             for (const column of blueprint.getForeignDrops()) {
-                const queryStringForeign = `alter table ${ name } drop foreign key ${enQuote(column)};`;
-                const queryStringIndex = `alter table ${name} drop index ${enQuote(column)};`;
-                await query(queryStringForeign);
-                await query(queryStringIndex);
+                const queryStringForeign = `alter table ${ name } drop foreign key ${Schema.enQuote(column)};`;
+                const queryStringIndex = `alter table ${name} drop index ${Schema.enQuote(column)};`;
+                await Schema.query(queryStringForeign);
+                await Schema.query(queryStringIndex);
             }
         }
         if (blueprint.getColumnDrops().length > 0) {
-            const columns = blueprint.getColumnDrops().map(columnName => `DROP COLUMN ${enQuote(columnName)}`);
+            const columns = blueprint.getColumnDrops().map(columnName => `DROP COLUMN ${Schema.enQuote(columnName)}`);
             const queryString = `alter table ${name} ${columns.join(',')}`;
-            await query(queryString);
+            await Schema.query(queryString);
         }
+    }
+
+    public static query(query: string, values?: any[]) {
+        return Schema.driver.query(query, values);
+    }
+
+    public static enQuote(value: string) {
+        return Schema.driver.enQuote(value);
     }
 
     public static setDriver(driver: Driver) {

@@ -3,6 +3,7 @@ import * as fs from "fs/promises";
 import {Config} from "../interfaces/config.interface";
 import * as path from "path";
 import chalk from "chalk";
+import {getConfig} from "../utils/get-config";
 
 enum MigrationType {
     CREATE = 'create',
@@ -43,8 +44,7 @@ export default class ${fileName} extends Migration {
 export class MakeMigrationCommand extends Command {
 
     async run(name: string): Promise<any> {
-        const configString = await fs.readFile(path.join(process.cwd(), 'migrationjs.conf.json'), {encoding: 'utf-8'});
-        const config: Config = JSON.parse(configString);
+        const config: Config = await getConfig();
         await this.checkMigrationFolder(config.folderName);
         const rootPath = process.cwd();
         const date = new Date();

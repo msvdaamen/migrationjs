@@ -61,7 +61,14 @@ export class Blueprint {
     }
 
     unsignedInteger(name: string, size: IntSizeType = 'normal') {
-        return this.integer(name, size).unsigned();
+        switch (this.driver.type) {
+            case "mysql": {
+                return this.integer(name, size).unsigned();
+            }
+            case "postgres": {
+                return this.integer(name, size);
+            }
+        }
     }
 
 

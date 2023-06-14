@@ -16,9 +16,6 @@ export {
 
 const args = require('process.args')();
 
-// const {Command} = require('./commands/command');
-// const {registerCommands} = require('./commands/command.registry');
-
 registerCommands();
 
 const argsParsed = Object.keys(args);

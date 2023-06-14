@@ -41,10 +41,6 @@ export class PostgresDriver implements Driver {
     return '"' + str + '"';
   }
 
-  static enQuote(str: string): string {
-    return '"' + str + '"';
-  }
-
   get type(): DatabaseDriver {
     return 'postgres';
   }
