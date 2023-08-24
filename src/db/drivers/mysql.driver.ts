@@ -1,21 +1,27 @@
 import {Driver} from "../driver";
 import * as mysql from "mysql2/promise";
-import {Connection} from "mysql2/promise";
+import {Connection, SslOptions} from "mysql2/promise";
 import {DatabaseConfig} from "../../interfaces/database.config";
 import {RowDataPacket} from "mysql2";
 import {DatabaseDriver} from "../../types/database.driver";
+import {ConnectionOptions} from "mysql2/index";
 
 export class MysqlDriver implements Driver {
   private connection: Connection = null;
 
   async init(database: DatabaseConfig) {
-    this.connection = await mysql.createConnection({
+    const config: ConnectionOptions = {
       host     : database.host,
       user     : database.user,
       password : database.password,
       database : database.database,
-      port: database.port ?? 3306
-    });
+      port: database.port ?? 3306,
+      ssl: {}
+    };
+    if (database.ssl?.rejectUnauthorized) {
+        (config.ssl as SslOptions).rejectUnauthorized = true
+    }
+    this.connection = await mysql.createConnection(config);
     await this.connection.connect();
   }
 

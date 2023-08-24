@@ -14,7 +14,10 @@ const defaultConfig: Config = {
     folderName: 'migrations'
 };
 
-export async function getConfig(): Promise<Config> {
+export async function getConfig(defaultConf: boolean = false): Promise<Config> {
+    if (defaultConf) {
+        return defaultConfig;
+    }
     const configString = await fs.readFile(path.join(process.cwd(), 'migrationjs.conf.json'), {encoding: 'utf-8'});
     if (!configString) {
         throw Error('No migrationjs.conf.json in project root');

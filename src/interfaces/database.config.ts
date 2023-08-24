@@ -7,4 +7,7 @@ export interface DatabaseConfig {
     password: string;
     port: number;
     database: string
+    ssl?: {
+        rejectUnauthorized: boolean
+    }
 }
