@@ -15,10 +15,10 @@ export class MysqlDriver implements Driver {
       user     : database.user,
       password : database.password,
       database : database.database,
-      port: database.port ?? 3306,
-      ssl: {}
+      port: database.port ?? 3306
     };
     if (database.ssl?.rejectUnauthorized) {
+      config.ssl = {};
         (config.ssl as SslOptions).rejectUnauthorized = true
     }
     this.connection = await mysql.createConnection(config);
