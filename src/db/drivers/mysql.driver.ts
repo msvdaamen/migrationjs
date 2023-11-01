@@ -25,7 +25,7 @@ export class MysqlDriver implements Driver {
     await this.connection.connect();
   }
 
-  query<T = RowDataPacket[]>(query: string, values: any[] = []) {
+  query<T = RowDataPacket[]>(query: string, values: any[] = []): Promise<T> {
     return this.connection.query(query, values).then((result) => result[0] as T);
   }
 

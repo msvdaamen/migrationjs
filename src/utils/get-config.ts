@@ -23,5 +23,7 @@ export async function getConfig(defaultConf: boolean = false): Promise<Config> {
         throw Error('No migrationjs.conf.json in project root');
     }
     const config: Config = JSON.parse(configString);
-    return Object.assign(defaultConfig, config);
+    defaultConfig.database = Object.assign(defaultConfig.database, config.database);
+    defaultConfig.folderName = config.folderName || defaultConfig.folderName;
+    return defaultConfig;
 }

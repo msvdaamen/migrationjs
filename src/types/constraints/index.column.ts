@@ -1,32 +1,33 @@
 import {ConstrainedColumn} from "../constrained.column";
+import {Schema} from "../../main/schema";
 
 
 export class IndexColumn extends ConstrainedColumn {
 
-    private readonly columns: string[];
-    private readonly customName?: string;
+    private readonly name: string[];
+    private readonly customName: string;
 
-    constructor(columns: string | string[], customName?: string) {
+    constructor(name: string | string[], customName: string = null) {
         super();
-        if (!Array.isArray(columns)) {
-            columns = [columns];
+        if (!Array.isArray(name)) {
+            name = [name];
         }
-        this.columns = columns;
+        this.name = name;
         this.customName = customName;
     }
-
-    private getName(tableName: string) {
-        if (this.customName) {
-            return this.customName;
-        }
-        return `${tableName}_${this.columns.join('_')}_idx`;
-    }
-
     toString(tableName: string): string {
-        return `CREATE INDEX ${this.getName(tableName)} ON ${tableName} (${this.columns.join(', ')})`;
+        const name = this.getName(tableName);
+        const columNames = this.name.map((name) => Schema.enQuote(name)).join(', ');
+        return `CREATE INDEX ${name} ON ${tableName} (${columNames})`;
     }
 
     toStringAlter(tableName: string) {
-        return `ADD INDEX (${tableName}_${this.columns.join(', ')})`;
+        const name = this.getName(tableName);
+        const columNames = this.name.map((name) => Schema.enQuote(name)).join(', ');
+        return `ADD INDEX ${name} ON ${tableName} (${columNames})`;
+    }
+
+    private getName(tableName: string): string {
+        return this.customName ? this.customName : `${tableName}_${this.name.join('_')}_ind`;
     }
 }

@@ -39,9 +39,7 @@ export class Blueprint {
     }
 
     uuid(name: string) {
-        const uuidColumn = new UuidColumn(
-            name
-        );
+        const uuidColumn = UuidColumn.create(name);
         return this.addColumn(uuidColumn);
     }
 
@@ -303,11 +301,8 @@ export class Blueprint {
     }
 
     dropForeign(name: string, customName: string = null) {
-        if (customName) {
-            this.foreignDrops.push(customName);
-            return;
-        }
-        this.foreignDrops.push(`${this.tableName}_${name}_fk`);
+        const fkName = customName ? customName : `${this.tableName}_${name}_fk`;
+        this.foreignDrops.push(fkName);
     }
 
     index(name: string | string[], customName?: string) {
@@ -315,8 +310,8 @@ export class Blueprint {
         return this.addConstrainedColumn(indexColumn);
     }
 
-    unique(name: string | string[]) {
-        const uniqueColumn = new UniqueColumn(name);
+    unique(name: string | string[], customName?: string) {
+        const uniqueColumn = new UniqueColumn(name, customName);
         return this.addConstrainedColumn(uniqueColumn);
     }
 

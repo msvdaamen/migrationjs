@@ -9,6 +9,7 @@ export class Column {
     private changed = false;
     private afterColumn: string = null;
     private generatedAsExpression: string = 'GENERATED';
+    protected isPrimary = false;
 
     constructor(
         private name: string,
@@ -17,6 +18,11 @@ export class Column {
 
     change() {
         this.changed = true;
+        return this;
+    }
+
+    primary() {
+        this.isPrimary = true;
         return this;
     }
 
@@ -74,7 +80,7 @@ export class Column {
         }
 
         if (!this.isNullable) {
-            // columnString += ` NOT NULL`;
+            columnString += ` NOT NULL`;
         }
 
         if (this.defaultValue || typeof this.defaultValue === 'boolean' || typeof this.defaultValue === 'number') {
@@ -88,6 +94,9 @@ export class Column {
                 columnString += ` DEFAULT ${this.defaultValue}`;
             }
         }
+        if (this.isPrimary) {
+            columnString += ` PRIMARY KEY`;
+        }
         return columnString;
     }
 
@@ -95,12 +104,20 @@ export class Column {
         let columnString = '';
 
         if(this.changed) {
-            columnString += 'MODIFY '
+            if (Schema.driver.type === 'mysql') {
+                columnString += 'MODIFY '
+            } else if (Schema.driver.type === 'postgres') {
+                columnString += 'ALTER COLUMN '
+            }
         } else {
             columnString += 'ADD '
         }
 
-        columnString += `${Schema.enQuote(this.name)} ${this.type}`;
+        columnString += `${Schema.enQuote(this.name)} `;
+        if (Schema.driver.type === 'postgres') {
+            columnString += 'TYPE '
+        }
+        columnString += this.type;
         if (this.length) {
             columnString += ` (${this.length})`
         }

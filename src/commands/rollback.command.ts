@@ -18,7 +18,8 @@ export class RollbackCommand extends Command {
 
         const result = await dbDriver.query(`select batch from migrations order by batch desc limit 1`);
         if(result.length === 0) {
-            throw Error('there or no migration');
+            console.log(chalk.yellow(`There are no migrations to rollback`));
+            return;
         }
         const lastMigrationBatchNumber = result[0].batch;
 

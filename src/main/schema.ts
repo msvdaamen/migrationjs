@@ -64,9 +64,11 @@ export class Schema {
                     constraintStrings.push(column.toString(name));
                 }
             }
-            const tables = [...columnStrings, ...constraintStrings].join(',');
-            const createString = `alter table ${name} ${tables}`;
-            await Schema.query(createString);
+            if (columnStrings.length || constraintStrings.length) {
+                const tables = [...columnStrings, ...constraintStrings].join(',');
+                const createString = `alter table ${name} ${tables}`;
+                await Schema.query(createString);
+            }
             for (const index of indexStrings) {
                 await Schema.query(index);
             }

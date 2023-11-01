@@ -8,6 +8,7 @@ import chalk from 'chalk';
 import {performance} from 'perf_hooks';
 import {Schema} from "../main/schema";
 import {getConfig} from "../utils/get-config";
+import * as fss from "fs/promises";
 
 export class MigrateCommand extends Command {
 
@@ -26,7 +27,7 @@ export class MigrateCommand extends Command {
         const migrationsPath = config.folderName;
 
         try {
-            const filenames = await readdir(migrationsPath);
+            const filenames = await fss.readdir(migrationsPath);
             const newMigrationSet = new Set<string>();
             filenames.forEach(filename => {
                 const subFilename = filename.substr(0, filename.lastIndexOf("."));
@@ -40,6 +41,10 @@ export class MigrateCommand extends Command {
             });
 
             const newMigrations = Array.from(newMigrationSet);
+            if (newMigrations.length === 0) {
+                console.log(chalk.yellow(`There are no migrations to migrate`));
+                return;
+            }
 
             const result = await dbDriver.query(`select max(batch) as max from migrations`);
             let batchNumber = 1;

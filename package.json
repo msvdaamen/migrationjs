@@ -1,18 +1,18 @@
 {
   "name": "migrationjs",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "migration system for js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "tsc": "tsc",
     "start": "nodemon",
     "versionPath": "npm version patch",
     "build": "tsc",
     "temp": "tsc && npm link ./dist"
   },
-  "preferGlobal": "true",
+  "preferGlobal": true,
   "bin": {
     "migrationjs": "dist/index.js"
   },
@@ -33,11 +33,13 @@
     "ts-node-dev": "^2.0.0"
   },
   "dependencies": {
+    "@types/jest": "^29.5.7",
     "chalk": "^4.1.2",
     "mysql2": "^3.3.5",
     "nodemon": "^2.0.22",
     "pg": "^8.11.0",
     "process.args": "^0.1.1",
+    "ts-jest": "^29.1.1",
     "typescript": "^4.9.5"
   },
   "bugs": {
