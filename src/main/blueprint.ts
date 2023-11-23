@@ -216,9 +216,10 @@ export class Blueprint {
         return this.addColumn(dateColumn);
     }
 
-    char(name: string) {
+    char(name: string, length: number) {
         const charColumn = new CharColumn(
-            name
+          name,
+          length
         )
         return this.addColumn(charColumn);
     }
