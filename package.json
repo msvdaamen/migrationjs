@@ -1,6 +1,6 @@
 {
   "name": "migrationjs",
-  "version": "0.4.7",
+  "version": "0.4.12",
   "description": "migration system for js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

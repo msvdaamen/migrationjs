@@ -110,13 +110,13 @@ export class Column {
                 columnString += 'ALTER COLUMN '
             }
         } else {
-            columnString += 'ADD '
+            columnString += 'ADD COLUMN '
         }
 
         columnString += `${Schema.enQuote(this.name)} `;
-        if (Schema.driver.type === 'postgres') {
-            columnString += 'TYPE '
-        }
+        // if (Schema.driver.type === 'postgres') {
+        //     columnString += 'TYPE '
+        // }
         columnString += this.type;
         if (this.length) {
             columnString += ` (${this.length})`

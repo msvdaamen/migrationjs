@@ -14,7 +14,7 @@ export class ForeignColumn extends ConstrainedColumn {
         super();
     }
 
-    private getConstrainName(tableName: string) {
+    public getConstrainName(tableName: string) {
         if (this.customName) {
             return this.customName;
         }

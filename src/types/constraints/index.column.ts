@@ -24,7 +24,10 @@ export class IndexColumn extends ConstrainedColumn {
     toStringAlter(tableName: string) {
         const name = this.getName(tableName);
         const columNames = this.name.map((name) => Schema.enQuote(name)).join(', ');
-        return `ADD INDEX ${name} ON ${tableName} (${columNames})`;
+        return `CREATE INDEX ${name} ON ${tableName} (${columNames})`;
+        // const name = this.getName(tableName);
+        // const columNames = this.name.map((name) => Schema.enQuote(name)).join(', ');
+        // return `ADD INDEX ${name} ON ${tableName} (${columNames})`;
     }
 
     private getName(tableName: string): string {

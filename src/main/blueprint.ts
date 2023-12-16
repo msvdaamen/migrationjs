@@ -244,7 +244,7 @@ export class Blueprint {
     foreign(name: string, customName?: string) {
         const foreignColumn = new ForeignColumn(name, customName);
         this.addConstrainedColumn(foreignColumn);
-        this.index(name, customName);
+        this.index(name, foreignColumn.getConstrainName(this.tableName));
         return foreignColumn;
     }
 

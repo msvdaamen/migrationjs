@@ -59,9 +59,9 @@ export class Schema {
             const constraintStrings: string[] = [];
             for (const column of blueprint.getConstraints()) {
                 if (column instanceof IndexColumn) {
-                    indexStrings.push(column.toString(name));
+                    indexStrings.push(column.toStringAlter(name));
                 } else {
-                    constraintStrings.push(column.toString(name));
+                    constraintStrings.push(column.toStringAlter(name));
                 }
             }
             if (columnStrings.length || constraintStrings.length) {
@@ -75,8 +75,8 @@ export class Schema {
         }
         if (blueprint.getForeignDrops().length) {
             for (const column of blueprint.getForeignDrops()) {
-                const queryStringForeign = `alter table ${ name } drop foreign key ${Schema.enQuote(column)};`;
-                const queryStringIndex = `alter table ${name} drop index ${Schema.enQuote(column)};`;
+                const queryStringForeign = this.driver.type === 'mysql' ? `alter table ${ name } drop foreign key ${Schema.enQuote(column)};` : `alter table ${ name } drop constraint ${Schema.enQuote(column)};`
+                const queryStringIndex = this.driver.type === 'mysql' ? `alter table ${name} drop index ${Schema.enQuote(column)};` : `drop index ${Schema.enQuote(column)};`
                 await Schema.query(queryStringForeign);
                 await Schema.query(queryStringIndex);
             }
